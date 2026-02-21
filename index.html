@@ -1,0 +1,1770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INZAG ETS — Export & Trade Solutions | European Equipment Financing for Africa</title>
+    <meta name="description" content="INZAG ETS: Access European government-backed financing for equipment purchases in Africa. Lower rates, longer terms, up to 85% coverage. Mining, construction, manufacturing, energy.">
+    <meta name="keywords" content="INZAG, export credit agency, ECA financing, equipment financing Africa, mining equipment finance, European export finance, trade finance Africa, SACE, Euler Hermes, UKEF">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="INZAG ETS — Export & Trade Solutions">
+    <meta property="og:description" content="European government-backed equipment financing for African businesses. Lower rates, longer terms, smarter growth.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://inzag.de/ets">
+
+    <!-- Fonts: INZAG Brand - Open Sans + Roboto -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+    <style>
+        :root {
+            /* INZAG Brand Colors — Option A: Darker Teal */
+            --primary: #1E2F36;          /* Dark Teal (deepened for contrast) */
+            --primary-light: #2a4049;
+            --accent: #F36F24;           /* INZAG Orange */
+            --accent-hover: #e05f15;
+            --grey: #847B74;             /* Middle Grey - brand text */
+            --white: #FFFFFF;
+            --off-white: #EAE9E8;        /* Platinum - brand secondary */
+            --light-gray: #D9D7D4;
+            --text: #2C2C2C;
+            --text-muted: #847B74;        /* Uses brand grey */
+            --success: #2E7D4F;
+            --gradient-hero: linear-gradient(135deg, #1E2F36 0%, #152228 50%, #1E2F36 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ===================== NAVIGATION ===================== */
+        .nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 1rem 2rem;
+            transition: all 0.3s ease;
+            background: transparent;
+        }
+
+        .nav.scrolled {
+            background: rgba(30, 47, 54, 0.97);
+            backdrop-filter: blur(10px);
+            padding: 0.7rem 2rem;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.15);
+        }
+
+        .nav.scrolled .nav-logo-img {
+            height: 60px;
+        }
+
+        .nav.scrolled .nav-logo-text {
+            font-size: 1.5rem;
+        }
+
+        .nav.scrolled .nav-logo-sub {
+            font-size: 0.7rem;
+        }
+
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-decoration: none;
+        }
+
+        .nav-logo-img {
+            height: 120px;
+            width: auto;
+        }
+
+        .nav-logo-text {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--white);
+            letter-spacing: -0.5px;
+        }
+
+        .nav-logo-sub {
+            font-size: 0.85rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            display: block;
+            margin-top: -2px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover { color: var(--accent); }
+
+        .nav-cta {
+            background: var(--accent) !important;
+            color: var(--primary) !important;
+            padding: 0.5rem 1.2rem;
+            border-radius: 6px;
+            font-weight: 600 !important;
+            transition: background 0.2s !important;
+        }
+
+        .nav-cta:hover { background: var(--accent-hover) !important; }
+
+        .nav-mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* ===================== HERO ===================== */
+        .hero {
+            background: var(--gradient-hero);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 70%;
+            height: 200%;
+            background: radial-gradient(ellipse, rgba(243,111,36,0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-pattern {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+        }
+
+        .hero-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 8rem 2rem 6rem;
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(243,111,36,0.15);
+            border: 1px solid rgba(243,111,36,0.3);
+            padding: 0.4rem 1rem;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            color: var(--accent);
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 3.4rem;
+            font-weight: 700;
+            color: var(--white);
+            line-height: 1.15;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 span {
+            color: var(--accent);
+        }
+
+        .hero-subtitle {
+            font-size: 1.15rem;
+            color: rgba(255,255,255,0.75);
+            line-height: 1.7;
+            margin-bottom: 2.5rem;
+            max-width: 520px;
+        }
+
+        .hero-ctas {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--primary);
+            padding: 0.85rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(243,111,36,0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--white);
+            padding: 0.85rem 2rem;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 1rem;
+            text-decoration: none;
+            border: 1px solid rgba(255,255,255,0.25);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover {
+            border-color: rgba(255,255,255,0.5);
+            background: rgba(255,255,255,0.05);
+        }
+
+        /* Hero stat cards */
+        .hero-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .hero-stat {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            transition: transform 0.2s;
+        }
+
+        .hero-stat:hover { transform: translateY(-3px); }
+
+        .hero-stat-number {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--accent);
+            line-height: 1;
+            margin-bottom: 0.3rem;
+        }
+
+        .hero-stat-label {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.65);
+            line-height: 1.4;
+        }
+
+        /* ===================== PROBLEM SECTION ===================== */
+        .problem {
+            padding: 6rem 2rem;
+            background: var(--off-white);
+        }
+
+        .section-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--accent);
+            margin-bottom: 0.8rem;
+        }
+
+        .section-title {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .section-subtitle {
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            max-width: 650px;
+            margin-bottom: 3rem;
+            line-height: 1.7;
+        }
+
+        .rate-comparison {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .rate-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            border: 1px solid var(--light-gray);
+        }
+
+        .rate-card-country {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        .rate-card-rate {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #C0392B;
+        }
+
+        .rate-card-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .rate-card.eca {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .rate-card.eca .rate-card-country { color: rgba(255,255,255,0.7); }
+        .rate-card.eca .rate-card-rate { color: var(--accent); }
+        .rate-card.eca .rate-card-label { color: rgba(255,255,255,0.5); }
+
+        .problem-caption {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-style: italic;
+            margin-top: 1rem;
+        }
+
+        /* ===================== HOW IT WORKS ===================== */
+        .how-it-works {
+            padding: 6rem 2rem;
+            background: white;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 0;
+            margin-top: 3rem;
+            position: relative;
+        }
+
+        .step {
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .step-number {
+            width: 48px;
+            height: 48px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin: 0 auto 1rem;
+        }
+
+        .step-icon {
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .step h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .step p {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .step-arrow {
+            display: none;
+        }
+
+        /* ===================== CALCULATOR SECTION ===================== */
+        .calculator-section {
+            padding: 6rem 2rem;
+            background: var(--primary);
+            color: white;
+        }
+
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: start;
+            margin-top: 2.5rem;
+        }
+
+        .calc-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .calc-field label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 0.4rem;
+        }
+
+        .calc-field input,
+        .calc-field select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.08);
+            color: white;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+        .calc-field input:focus,
+        .calc-field select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .calc-field select option { background: var(--primary); color: white; }
+
+        .calc-results {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+
+        .calc-results h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+        }
+
+        .calc-compare {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .calc-compare-col {
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            padding: 1.2rem;
+        }
+
+        .calc-compare-col h4 {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+            color: rgba(255,255,255,0.5);
+        }
+
+        .calc-compare-col.eca-col h4 { color: var(--accent); }
+
+        .calc-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.4rem 0;
+            font-size: 0.85rem;
+        }
+
+        .calc-row-label { color: rgba(255,255,255,0.6); }
+        .calc-row-value { font-weight: 600; color: white; }
+
+        .calc-savings {
+            background: rgba(46,125,79,0.2);
+            border: 1px solid rgba(46,125,79,0.3);
+            border-radius: 10px;
+            padding: 1.2rem;
+            text-align: center;
+        }
+
+        .calc-savings-amount {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #5CDB7F;
+        }
+
+        .calc-savings-label {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.6);
+        }
+
+        /* ===================== SECTORS ===================== */
+        .sectors {
+            padding: 6rem 2rem;
+            background: var(--off-white);
+        }
+
+        .sector-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2.5rem;
+        }
+
+        .sector-card {
+            background: white;
+            border-radius: 14px;
+            padding: 2rem;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            border: 1px solid var(--light-gray);
+            transition: all 0.2s;
+        }
+
+        .sector-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .sector-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(56,87,96,0.08);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .sector-card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .sector-card p {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .sector-examples {
+            margin-top: 0.8rem;
+            font-size: 0.8rem;
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        /* ===================== QUALIFICATION CHECK ===================== */
+        .qualify {
+            padding: 6rem 2rem;
+            background: white;
+        }
+
+        .qualify-card {
+            max-width: 700px;
+            margin: 2.5rem auto 0;
+            background: var(--off-white);
+            border-radius: 16px;
+            padding: 2.5rem;
+            border: 1px solid var(--light-gray);
+        }
+
+        .qualify-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .qualify-item:last-child { border-bottom: none; }
+
+        .qualify-check {
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+            border-radius: 50%;
+            border: 2px solid var(--light-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        .qualify-check.checked {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        .qualify-item-text {
+            font-size: 0.95rem;
+            color: var(--text);
+            padding-top: 0.2rem;
+        }
+
+        .qualify-result {
+            margin-top: 1.5rem;
+            padding: 1.2rem;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+            display: none;
+        }
+
+        .qualify-result.show { display: block; }
+        .qualify-result.strong { background: rgba(46,125,79,0.1); color: var(--success); }
+        .qualify-result.possible { background: rgba(243,111,36,0.15); color: #B8860B; }
+        .qualify-result.unlikely { background: rgba(192,57,43,0.1); color: #C0392B; }
+
+        /* ===================== ECAS ===================== */
+        .ecas {
+            padding: 6rem 2rem;
+            background: var(--off-white);
+        }
+
+        .eca-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1.2rem;
+            margin-top: 2.5rem;
+        }
+
+        .eca-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+            border: 1px solid var(--light-gray);
+        }
+
+        .eca-flag {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .eca-name {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .eca-country {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* ===================== ABOUT / CREDIBILITY ===================== */
+        .about {
+            padding: 6rem 2rem;
+            background: white;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            margin-top: 2.5rem;
+        }
+
+        .about-stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .about-stat {
+            background: var(--off-white);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .about-stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .about-stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.2rem;
+        }
+
+        .about-text p {
+            font-size: 1rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        /* ===================== CTA SECTION ===================== */
+        .cta-section {
+            padding: 6rem 2rem;
+            background: var(--gradient-hero);
+            text-align: center;
+        }
+
+        .cta-section .section-title { color: white; }
+
+        .cta-section p {
+            color: rgba(255,255,255,0.7);
+            font-size: 1.1rem;
+            max-width: 550px;
+            margin: 1rem auto 2.5rem;
+            line-height: 1.7;
+        }
+
+        /* ===================== CHATBOT ===================== */
+        .chatbot-trigger {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(243,111,36,0.4);
+            z-index: 999;
+            border: none;
+            transition: all 0.3s;
+            color: var(--primary);
+        }
+
+        .chatbot-trigger:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(243,111,36,0.5);
+        }
+
+        .chatbot-window {
+            position: fixed;
+            bottom: 6rem;
+            right: 2rem;
+            width: 380px;
+            max-height: 520px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            z-index: 998;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chatbot-window.open { display: flex; }
+
+        .chatbot-header {
+            background: var(--primary);
+            padding: 1rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .chatbot-avatar {
+            width: 36px;
+            height: 36px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 0.85rem;
+        }
+
+        .chatbot-header-text h4 {
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .chatbot-header-text p {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.75rem;
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            max-height: 360px;
+        }
+
+        .chat-msg {
+            max-width: 85%;
+            padding: 0.7rem 1rem;
+            border-radius: 12px;
+            font-size: 0.88rem;
+            line-height: 1.5;
+        }
+
+        .chat-msg.bot {
+            background: var(--off-white);
+            color: var(--text);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .chat-msg.user {
+            background: var(--primary);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-self: flex-start;
+        }
+
+        .chat-option {
+            background: white;
+            border: 1px solid var(--light-gray);
+            border-radius: 100px;
+            padding: 0.4rem 0.9rem;
+            font-size: 0.82rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .chat-option:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .chatbot-input {
+            padding: 0.8rem 1rem;
+            border-top: 1px solid var(--light-gray);
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chatbot-input input {
+            flex: 1;
+            border: 1px solid var(--light-gray);
+            border-radius: 100px;
+            padding: 0.5rem 1rem;
+            font-size: 0.88rem;
+            font-family: inherit;
+            outline: none;
+        }
+
+        .chatbot-input input:focus { border-color: var(--accent); }
+
+        .chatbot-input button {
+            background: var(--accent);
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--primary);
+        }
+
+        /* ===================== FOOTER ===================== */
+        .footer {
+            background: var(--primary);
+            padding: 3rem 2rem 1.5rem;
+            color: rgba(255,255,255,0.5);
+        }
+
+        .footer-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 3rem;
+        }
+
+        .footer h4 {
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer p, .footer a {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.5);
+            text-decoration: none;
+            line-height: 1.8;
+        }
+
+        .footer a:hover { color: var(--accent); }
+
+        .footer-bottom {
+            max-width: 1100px;
+            margin: 2rem auto 0;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            font-size: 0.78rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* ===================== RESPONSIVE ===================== */
+        @media (max-width: 768px) {
+            .hero-inner {
+                grid-template-columns: 1fr;
+                padding: 7rem 1.5rem 4rem;
+            }
+
+            .hero h1 { font-size: 2.4rem; }
+
+            .hero-stats {
+                grid-template-columns: 1fr 1fr;
+                gap: 0.8rem;
+            }
+
+            .nav-links { display: none; }
+            .nav-mobile-toggle { display: block; }
+
+            .calculator-grid { grid-template-columns: 1fr; }
+            .about-grid { grid-template-columns: 1fr; }
+            .footer-inner { grid-template-columns: 1fr; gap: 2rem; }
+            .footer-bottom { flex-direction: column; gap: 0.5rem; }
+
+            .chatbot-window {
+                width: calc(100% - 2rem);
+                right: 1rem;
+                bottom: 5rem;
+            }
+
+            .section-title { font-size: 1.9rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ==================== NAVIGATION ==================== -->
+<nav class="nav" id="nav">
+    <div class="nav-inner">
+        <a href="#" class="nav-logo">
+            <img src="data:image/png;base64,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" alt="INZAG" class="nav-logo-img">
+            <div>
+                <div class="nav-logo-text">INZAG <span style="color:var(--accent)">ETS</span></div>
+                <div class="nav-logo-sub">Export & Trade Solutions</div>
+            </div>
+        </a>
+        <ul class="nav-links">
+            <li><a href="#how-it-works">How It Works</a></li>
+            <li><a href="#calculator">Savings Calculator</a></li>
+            <li><a href="#sectors">Sectors</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact" class="nav-cta">Get Started</a></li>
+        </ul>
+        <button class="nav-mobile-toggle" onclick="document.querySelector('.nav-links').classList.toggle('mobile-open')">
+            <i data-lucide="menu" style="width:24px;height:24px"></i>
+        </button>
+    </div>
+</nav>
+
+<!-- ==================== HERO ==================== -->
+<section class="hero">
+    <div class="hero-pattern"></div>
+    <div class="hero-inner">
+        <div>
+            <div class="hero-badge">
+                <i data-lucide="shield-check" style="width:14px;height:14px"></i>
+                European Government-Backed Financing
+            </div>
+            <h1>Smarter Equipment Financing <span>for Africa</span></h1>
+            <p class="hero-subtitle">
+                Access European government-backed loans at 4–7% interest with up to 85% financing coverage and 5–8 year repayment terms. We connect your business to the capital equipment it needs to grow.
+            </p>
+            <div class="hero-ctas">
+                <a href="#calculator" class="btn-primary">
+                    Calculate Your Savings
+                    <i data-lucide="arrow-right" style="width:18px;height:18px"></i>
+                </a>
+                <a href="#how-it-works" class="btn-secondary">
+                    Learn How It Works
+                </a>
+            </div>
+        </div>
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <div class="hero-stat-number">4–7%</div>
+                <div class="hero-stat-label">Interest rates via ECA-backed financing</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-number">85%</div>
+                <div class="hero-stat-label">Equipment value financed — only 15% upfront</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-number">5–8 yr</div>
+                <div class="hero-stat-label">Repayment terms — double or triple local banks</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-number">$2–15M</div>
+                <div class="hero-stat-label">Equipment financing from European manufacturers</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== PROBLEM ==================== -->
+<section class="problem">
+    <div class="section-inner">
+        <div class="section-label">The Challenge</div>
+        <h2 class="section-title">Local borrowing is expensive. There's a better way.</h2>
+        <p class="section-subtitle">
+            Commercial bank rates across Africa make equipment investments painfully expensive, with short terms that strain your cash flow. European Export Credit Agencies offer a proven alternative.
+        </p>
+        <div class="rate-comparison">
+            <div class="rate-card">
+                <div class="rate-card-country">South Africa</div>
+                <div class="rate-card-rate">10–14%</div>
+                <div class="rate-card-label">3–5 year terms</div>
+            </div>
+            <div class="rate-card">
+                <div class="rate-card-country">Kenya</div>
+                <div class="rate-card-rate">14–17%</div>
+                <div class="rate-card-label">2–4 year terms</div>
+            </div>
+            <div class="rate-card">
+                <div class="rate-card-country">Ghana</div>
+                <div class="rate-card-rate">22–30%</div>
+                <div class="rate-card-label">2–3 year terms</div>
+            </div>
+            <div class="rate-card">
+                <div class="rate-card-country">Zambia</div>
+                <div class="rate-card-rate">25–29%</div>
+                <div class="rate-card-label">2–3 year terms</div>
+            </div>
+            <div class="rate-card">
+                <div class="rate-card-country">Tanzania</div>
+                <div class="rate-card-rate">12–15%</div>
+                <div class="rate-card-label">3–5 year terms</div>
+            </div>
+            <div class="rate-card eca">
+                <div class="rate-card-country">ECA-Backed</div>
+                <div class="rate-card-rate">4–7%</div>
+                <div class="rate-card-label">5–8 year terms</div>
+            </div>
+        </div>
+        <p class="problem-caption">Rates shown are approximate commercial bank lending rates for equipment financing (2025). ECA rates depend on project specifics and country risk.</p>
+    </div>
+</section>
+
+<!-- ==================== HOW IT WORKS ==================== -->
+<section class="how-it-works" id="how-it-works">
+    <div class="section-inner">
+        <div class="section-label">Simple Process</div>
+        <h2 class="section-title">How ECA Financing Works</h2>
+        <p class="section-subtitle">
+            Export Credit Agencies are government institutions that guarantee loans when you buy equipment from their country's manufacturers. We manage the entire process for you.
+        </p>
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-icon"><i data-lucide="message-circle" style="width:24px;height:24px"></i></div>
+                <h3>Tell Us What You Need</h3>
+                <p>Describe your equipment requirements and business context. We assess feasibility within 2 weeks.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-icon"><i data-lucide="search" style="width:24px;height:24px"></i></div>
+                <h3>We Source & Structure</h3>
+                <p>We identify the best European manufacturers and build a financing package tailored to your needs.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-icon"><i data-lucide="shield" style="width:24px;height:24px"></i></div>
+                <h3>ECA Guarantee</h3>
+                <p>The ECA guarantees the loan, unlocking favourable bank terms that wouldn't be available otherwise.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-icon"><i data-lucide="banknote" style="width:24px;height:24px"></i></div>
+                <h3>Bank Provides the Loan</h3>
+                <p>A European bank funds the transaction. The manufacturer is paid upfront — no risk to you.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">5</div>
+                <div class="step-icon"><i data-lucide="truck" style="width:24px;height:24px"></i></div>
+                <h3>You Receive Equipment</h3>
+                <p>Equipment is delivered and you repay over 5–8 years at a fraction of local bank rates.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== SAVINGS CALCULATOR ==================== -->
+<section class="calculator-section" id="calculator">
+    <div class="section-inner">
+        <div class="section-label" style="color:var(--accent)">Interactive Tool</div>
+        <h2 class="section-title" style="color:white">See How Much You Could Save</h2>
+        <p class="section-subtitle" style="color:rgba(255,255,255,0.6)">
+            Enter your equipment cost and country to compare local bank financing with ECA-backed terms.
+        </p>
+        <div class="calculator-grid">
+            <div class="calc-form">
+                <div class="calc-field">
+                    <label>Equipment Cost (USD)</label>
+                    <input type="number" id="calc-amount" value="5000000" min="500000" max="50000000" step="100000">
+                </div>
+                <div class="calc-field">
+                    <label>Your Country</label>
+                    <select id="calc-country">
+                        <option value="12" data-term="4">South Africa (10–14%)</option>
+                        <option value="15.5" data-term="3">Kenya (14–17%)</option>
+                        <option value="26" data-term="2.5">Ghana (22–30%)</option>
+                        <option value="27" data-term="2.5">Zambia (25–29%)</option>
+                        <option value="13.5" data-term="4">Tanzania (12–15%)</option>
+                        <option value="20" data-term="3">Mozambique (~18–22%)</option>
+                        <option value="22" data-term="3">DRC (~20–24%)</option>
+                        <option value="16" data-term="3">Botswana (~14–18%)</option>
+                        <option value="15" data-term="3">Namibia (~13–17%)</option>
+                        <option value="18" data-term="3">Other African country (~16–20%)</option>
+                    </select>
+                </div>
+                <div class="calc-field">
+                    <label>ECA Interest Rate (%)</label>
+                    <input type="number" id="calc-eca-rate" value="5.5" min="3" max="9" step="0.5">
+                </div>
+                <button class="btn-primary" onclick="calculateSavings()" style="align-self:flex-start">
+                    Calculate Savings
+                    <i data-lucide="calculator" style="width:18px;height:18px"></i>
+                </button>
+            </div>
+            <div class="calc-results" id="calc-results">
+                <h3>Your Comparison</h3>
+                <div class="calc-compare">
+                    <div class="calc-compare-col">
+                        <h4>Local Bank</h4>
+                        <div class="calc-row"><span class="calc-row-label">Financed</span><span class="calc-row-value" id="r-local-financed">—</span></div>
+                        <div class="calc-row"><span class="calc-row-label">Upfront</span><span class="calc-row-value" id="r-local-upfront">—</span></div>
+                        <div class="calc-row"><span class="calc-row-label">Rate</span><span class="calc-row-value" id="r-local-rate">—</span></div>
+                        <div class="calc-row"><span class="calc-row-label">Term</span><span class="calc-row-value" id="r-local-term">—</span></div>
+                        <div class="calc-row"><span class="calc-row-label">Monthly</span><span class="calc-row-value" id="r-local-monthly">—</span></div>
+                    </div>
+                    <div class="calc-compare-col eca-col">
+                        <h4>ECA-Backed</h4>
+                        <div class="calc-row"><span class="calc-row-label">Financed</span><span class="calc-row-value" id="r-eca-financed">—</span></div>
+                        <div class="calc-row"><span class="calc-row-label">Upfront</span><span class="calc-row-value" id="r-eca-upfront">—</span></div>
+                        <div class="calc-row"><span class="calc-row-label">Rate</span><span class="calc-row-value" id="r-eca-rate">—</span></div>
+                        <div class="calc-row"><span class="calc-row-label">Term</span><span class="calc-row-value" id="r-eca-term">—</span></div>
+                        <div class="calc-row"><span class="calc-row-label">Monthly</span><span class="calc-row-value" id="r-eca-monthly">—</span></div>
+                    </div>
+                </div>
+                <div class="calc-savings">
+                    <div class="calc-savings-label">Estimated Monthly Savings</div>
+                    <div class="calc-savings-amount" id="r-savings">—</div>
+                    <div class="calc-savings-label" id="r-savings-extra"></div>
+                </div>
+                <p style="font-size:0.75rem;color:rgba(255,255,255,0.35);margin-top:1rem;text-align:center;">
+                    Illustrative only. Actual terms depend on company profile, equipment origin, and ECA country risk assessment. ECA premiums (1–3%) are not included in this estimate.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== SECTORS ==================== -->
+<section class="sectors" id="sectors">
+    <div class="section-inner">
+        <div class="section-label">Industries We Serve</div>
+        <h2 class="section-title">Equipment Financing Across Key Sectors</h2>
+        <p class="section-subtitle">
+            If your business needs European-manufactured capital equipment worth USD 2–15 million, we can likely structure a financing solution for you.
+        </p>
+        <div class="sector-grid">
+            <div class="sector-card">
+                <div class="sector-icon"><i data-lucide="mountain" style="width:24px;height:24px"></i></div>
+                <h3>Mining & Resources</h3>
+                <p>Drilling rigs, excavators, crushers, processing plants, conveyor systems, ventilation.</p>
+                <div class="sector-examples">Copper, gold, cobalt, lithium, PGMs, graphite</div>
+            </div>
+            <div class="sector-card">
+                <div class="sector-icon"><i data-lucide="building-2" style="width:24px;height:24px"></i></div>
+                <h3>Construction</h3>
+                <p>Cranes, earthmoving equipment, concrete plants, road machinery, formwork systems.</p>
+                <div class="sector-examples">Infrastructure, housing, commercial, industrial</div>
+            </div>
+            <div class="sector-card">
+                <div class="sector-icon"><i data-lucide="factory" style="width:24px;height:24px"></i></div>
+                <h3>Manufacturing</h3>
+                <p>Production lines, packaging, industrial boilers, compressors, water treatment.</p>
+                <div class="sector-examples">Food & beverage, cement, agri-processing</div>
+            </div>
+            <div class="sector-card">
+                <div class="sector-icon"><i data-lucide="zap" style="width:24px;height:24px"></i></div>
+                <h3>Energy & Utilities</h3>
+                <p>Generators, solar equipment, transformers, switchgear, pumping stations.</p>
+                <div class="sector-examples">IPPs, solar, mini-grids, distribution</div>
+            </div>
+            <div class="sector-card">
+                <div class="sector-icon"><i data-lucide="truck" style="width:24px;height:24px"></i></div>
+                <h3>Logistics & Transport</h3>
+                <p>Specialized vehicles, port handling, rail components, warehouse systems.</p>
+                <div class="sector-examples">Ports, freight, cold chain, warehousing</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== QUALIFICATION CHECK ==================== -->
+<section class="qualify" id="qualify">
+    <div class="section-inner" style="text-align:center">
+        <div class="section-label">Quick Check</div>
+        <h2 class="section-title">Do You Qualify?</h2>
+        <p class="section-subtitle" style="margin:0.5rem auto 0;max-width:600px">
+            Check each item that applies to your company. The more boxes you tick, the stronger your fit for ECA-backed financing.
+        </p>
+        <div class="qualify-card" id="qualify-card">
+            <div class="qualify-item" onclick="toggleCheck(this)">
+                <div class="qualify-check"><i data-lucide="check" style="width:16px;height:16px;display:none"></i></div>
+                <div class="qualify-item-text">We are a <strong>private company</strong> (not a government entity or SOE)</div>
+            </div>
+            <div class="qualify-item" onclick="toggleCheck(this)">
+                <div class="qualify-check"><i data-lucide="check" style="width:16px;height:16px;display:none"></i></div>
+                <div class="qualify-item-text">We have been operating for <strong>at least 5 years</strong></div>
+            </div>
+            <div class="qualify-item" onclick="toggleCheck(this)">
+                <div class="qualify-check"><i data-lucide="check" style="width:16px;height:16px;display:none"></i></div>
+                <div class="qualify-item-text">Our annual revenue is between <strong>USD 20–150 million</strong></div>
+            </div>
+            <div class="qualify-item" onclick="toggleCheck(this)">
+                <div class="qualify-check"><i data-lucide="check" style="width:16px;height:16px;display:none"></i></div>
+                <div class="qualify-item-text">We generate revenue in <strong>hard currency</strong> (USD, EUR) or from exports</div>
+            </div>
+            <div class="qualify-item" onclick="toggleCheck(this)">
+                <div class="qualify-check"><i data-lucide="check" style="width:16px;height:16px;display:none"></i></div>
+                <div class="qualify-item-text">We have a specific <strong>equipment/CAPEX need of USD 2–15 million</strong></div>
+            </div>
+            <div class="qualify-item" onclick="toggleCheck(this)">
+                <div class="qualify-check"><i data-lucide="check" style="width:16px;height:16px;display:none"></i></div>
+                <div class="qualify-item-text">Our existing debt levels are <strong>manageable</strong> (not over-leveraged)</div>
+            </div>
+            <div id="qualify-result" class="qualify-result"></div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== ECAs ==================== -->
+<section class="ecas">
+    <div class="section-inner" style="text-align:center">
+        <div class="section-label">Our Partners</div>
+        <h2 class="section-title">Government-Backed Export Credit Agencies</h2>
+        <p class="section-subtitle" style="margin:0.5rem auto 0;max-width:600px">
+            These are not private lenders. They are government institutions from Europe's strongest economies, created to support international trade.
+        </p>
+        <div class="eca-grid">
+            <div class="eca-card">
+                <div class="eca-flag">&#127465;&#127466;</div>
+                <div class="eca-name">Euler Hermes</div>
+                <div class="eca-country">Germany</div>
+            </div>
+            <div class="eca-card">
+                <div class="eca-flag">&#127470;&#127481;</div>
+                <div class="eca-name">SACE</div>
+                <div class="eca-country">Italy</div>
+            </div>
+            <div class="eca-card">
+                <div class="eca-flag">&#127468;&#127463;</div>
+                <div class="eca-name">UKEF</div>
+                <div class="eca-country">United Kingdom</div>
+            </div>
+            <div class="eca-card">
+                <div class="eca-flag">&#127467;&#127479;</div>
+                <div class="eca-name">Bpifrance</div>
+                <div class="eca-country">France</div>
+            </div>
+            <div class="eca-card">
+                <div class="eca-flag">&#127480;&#127466;</div>
+                <div class="eca-name">EKN</div>
+                <div class="eca-country">Sweden</div>
+            </div>
+            <div class="eca-card">
+                <div class="eca-flag">&#127462;&#127481;</div>
+                <div class="eca-name">OeKB</div>
+                <div class="eca-country">Austria</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== ABOUT ==================== -->
+<section class="about" id="about">
+    <div class="section-inner">
+        <div class="section-label">Who We Are</div>
+        <h2 class="section-title">Built on 77 Years of Infrastructure Experience</h2>
+        <div class="about-grid">
+            <div class="about-text">
+                <p>
+                    <strong>INZAG ETS (Export & Trade Solutions)</strong> is the commercial platform of INZAG Germany GmbH, part of a global infrastructure and construction group that has delivered over 1,000 contracts across 4 continents.
+                </p>
+                <p>
+                    We are not a bank and not a broker. We are your structuring and coordination partner — connecting African businesses to European manufacturers, banks, and government-backed financing in a single, managed package.
+                </p>
+                <p>
+                    Our team understands both sides of the transaction: the African business landscape and the European export finance ecosystem. We bridge the gap so you can focus on growing your business.
+                </p>
+            </div>
+            <div class="about-stats-grid">
+                <div class="about-stat">
+                    <div class="about-stat-number">77+</div>
+                    <div class="about-stat-label">Years of experience</div>
+                </div>
+                <div class="about-stat">
+                    <div class="about-stat-number">1,000+</div>
+                    <div class="about-stat-label">Contracts delivered</div>
+                </div>
+                <div class="about-stat">
+                    <div class="about-stat-number">4</div>
+                    <div class="about-stat-label">Continents of operations</div>
+                </div>
+                <div class="about-stat">
+                    <div class="about-stat-number">19</div>
+                    <div class="about-stat-label">Mining projects completed</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== CTA ==================== -->
+<section class="cta-section" id="contact">
+    <div class="section-inner" style="text-align:center">
+        <div class="section-label" style="color:var(--accent)">Get Started</div>
+        <h2 class="section-title" style="color:white">Ready to Explore Smarter Financing?</h2>
+        <p>
+            Tell us about your equipment needs. We'll assess feasibility within 2 weeks — confidential, no obligation, no upfront fees.
+        </p>
+        <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+            <a href="mailto:ets@inzag.de" class="btn-primary" style="font-size:1.05rem;padding:1rem 2.5rem">
+                <i data-lucide="mail" style="width:20px;height:20px"></i>
+                Contact Us
+            </a>
+            <a href="#qualify" class="btn-secondary" style="font-size:1.05rem;padding:1rem 2.5rem">
+                Check If You Qualify
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer class="footer">
+    <div class="footer-inner">
+        <div>
+            <div style="display:flex;align-items:center;gap:0.8rem;margin-bottom:1rem">
+                <img src="data:image/png;base64,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" alt="INZAG" style="height:36px;">
+                <span style="color:white;font-weight:600">INZAG ETS</span>
+            </div>
+            <p>Export & Trade Solutions by INZAG Germany GmbH. Connecting African businesses to European equipment financing backed by government Export Credit Agencies.</p>
+        </div>
+        <div>
+            <h4>Navigation</h4>
+            <a href="#how-it-works" style="display:block">How It Works</a>
+            <a href="#calculator" style="display:block">Savings Calculator</a>
+            <a href="#sectors" style="display:block">Sectors</a>
+            <a href="#qualify" style="display:block">Qualification Check</a>
+            <a href="#about" style="display:block">About Us</a>
+        </div>
+        <div>
+            <h4>Contact</h4>
+            <p>INZAG Germany GmbH<br>Frankfurt, Germany</p>
+            <a href="mailto:ets@inzag.de" style="display:block;margin-top:0.5rem">ets@inzag.de</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <span>&copy; 2026 INZAG Germany GmbH. All rights reserved.</span>
+        <span>INZAG ETS — Export & Trade Solutions</span>
+    </div>
+</footer>
+
+<!-- ==================== CHATBOT ==================== -->
+<button class="chatbot-trigger" id="chatbot-trigger" onclick="toggleChat()">
+    <i data-lucide="message-circle" style="width:28px;height:28px"></i>
+</button>
+
+<div class="chatbot-window" id="chatbot-window">
+    <div class="chatbot-header">
+        <div class="chatbot-avatar" style="font-size:0.7rem">INZAG</div>
+        <div class="chatbot-header-text">
+            <h4>INZAG ETS Assistant</h4>
+            <p>Ask me about ECA financing</p>
+        </div>
+    </div>
+    <div class="chatbot-messages" id="chatbot-messages">
+        <!-- Messages inserted by JS -->
+    </div>
+    <div class="chatbot-input">
+        <input type="text" id="chat-input" placeholder="Type your question..." onkeypress="if(event.key==='Enter')sendMessage()">
+        <button onclick="sendMessage()">
+            <i data-lucide="send" style="width:16px;height:16px"></i>
+        </button>
+    </div>
+</div>
+
+<!-- ==================== JAVASCRIPT ==================== -->
+<script>
+    // Initialize icons
+    lucide.createIcons();
+
+    // ===== NAV SCROLL =====
+    window.addEventListener('scroll', () => {
+        document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    // ===== SAVINGS CALCULATOR =====
+    function formatUSD(n) {
+        return '$' + Math.round(n).toLocaleString('en-US');
+    }
+
+    function monthlyPayment(principal, annualRate, years) {
+        const r = annualRate / 100 / 12;
+        const n = years * 12;
+        if (r === 0) return principal / n;
+        return principal * (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+    }
+
+    function calculateSavings() {
+        const amount = parseFloat(document.getElementById('calc-amount').value);
+        const sel = document.getElementById('calc-country');
+        const localRate = parseFloat(sel.value);
+        const localTerm = parseFloat(sel.options[sel.selectedIndex].dataset.term);
+        const ecaRate = parseFloat(document.getElementById('calc-eca-rate').value);
+        const ecaTerm = 7;
+
+        const localFinanced = amount * 0.70;
+        const localUpfront = amount * 0.30;
+        const ecaFinanced = amount * 0.85;
+        const ecaUpfront = amount * 0.15;
+
+        const localMonthly = monthlyPayment(localFinanced, localRate, localTerm);
+        const ecaMonthly = monthlyPayment(ecaFinanced, ecaRate, ecaTerm);
+        const savings = localMonthly - ecaMonthly;
+
+        document.getElementById('r-local-financed').textContent = formatUSD(localFinanced);
+        document.getElementById('r-local-upfront').textContent = formatUSD(localUpfront);
+        document.getElementById('r-local-rate').textContent = localRate + '%';
+        document.getElementById('r-local-term').textContent = localTerm + ' years';
+        document.getElementById('r-local-monthly').textContent = formatUSD(localMonthly);
+
+        document.getElementById('r-eca-financed').textContent = formatUSD(ecaFinanced);
+        document.getElementById('r-eca-upfront').textContent = formatUSD(ecaUpfront);
+        document.getElementById('r-eca-rate').textContent = ecaRate + '%';
+        document.getElementById('r-eca-term').textContent = ecaTerm + ' years';
+        document.getElementById('r-eca-monthly').textContent = formatUSD(ecaMonthly);
+
+        document.getElementById('r-savings').textContent = formatUSD(savings) + '/mo';
+        document.getElementById('r-savings-extra').textContent =
+            'Plus ' + formatUSD(localUpfront - ecaUpfront) + ' less upfront capital needed';
+    }
+
+    // Run on load
+    calculateSavings();
+
+    // ===== QUALIFICATION CHECK =====
+    function toggleCheck(item) {
+        const check = item.querySelector('.qualify-check');
+        const icon = check.querySelector('i, svg');
+        check.classList.toggle('checked');
+        if (icon) icon.style.display = check.classList.contains('checked') ? 'block' : 'none';
+
+        const total = document.querySelectorAll('.qualify-check.checked').length;
+        const result = document.getElementById('qualify-result');
+
+        if (total >= 5) {
+            result.className = 'qualify-result show strong';
+            result.innerHTML = '<strong>Strong fit.</strong> Your company profile aligns well with ECA financing criteria. We should talk.';
+        } else if (total >= 3) {
+            result.className = 'qualify-result show possible';
+            result.innerHTML = '<strong>Possible fit.</strong> There may be a financing structure that works for you. Contact us to explore.';
+        } else if (total >= 1) {
+            result.className = 'qualify-result show unlikely';
+            result.innerHTML = '<strong>Uncertain fit.</strong> ECA financing typically requires most of these criteria. Reach out and we\'ll assess your specific situation.';
+        } else {
+            result.className = 'qualify-result';
+        }
+    }
+
+    // ===== CHATBOT =====
+    const chatMessages = document.getElementById('chatbot-messages');
+    let chatStep = 0;
+
+    const chatFlow = {
+        start: {
+            bot: "Hi! I'm the INZAG ETS Finance Assistant. I can help you understand if ECA-backed equipment financing could work for your business. What would you like to know?",
+            options: [
+                { text: "What is ECA financing?", next: "what_is_eca" },
+                { text: "Do I qualify?", next: "qualify_sector" },
+                { text: "How much can I save?", next: "savings" },
+                { text: "Talk to a human", next: "human" }
+            ]
+        },
+        what_is_eca: {
+            bot: "Export Credit Agencies (ECAs) are government institutions in Europe. When you buy equipment from a European manufacturer, the ECA guarantees the loan — meaning a European bank can offer you much better rates (4-7%) and longer terms (5-8 years) than your local bank. You only need 15% upfront. Think of it as the European government helping make the deal happen, because it supports their manufacturers too. It's a win-win.",
+            options: [
+                { text: "Do I qualify?", next: "qualify_sector" },
+                { text: "Which ECAs do you work with?", next: "which_ecas" },
+                { text: "How much can I save?", next: "savings" }
+            ]
+        },
+        which_ecas: {
+            bot: "We work with ECAs from six European countries: Euler Hermes (Germany), SACE (Italy), UKEF (United Kingdom), Bpifrance (France), EKN (Sweden), and OeKB (Austria). Each supports equipment exports from their country. SACE and UKEF are particularly active in African markets right now. We match you to the right ECA based on what equipment you need and where it's manufactured.",
+            options: [
+                { text: "Do I qualify?", next: "qualify_sector" },
+                { text: "What's the process?", next: "process" },
+                { text: "Talk to a human", next: "human" }
+            ]
+        },
+        qualify_sector: {
+            bot: "Let's do a quick check. First — what sector is your business in?",
+            options: [
+                { text: "Mining & Resources", next: "qualify_size" },
+                { text: "Construction", next: "qualify_size" },
+                { text: "Manufacturing", next: "qualify_size" },
+                { text: "Energy / Utilities / Logistics", next: "qualify_size" }
+            ]
+        },
+        qualify_size: {
+            bot: "Great, that sector fits well. Now — roughly how much is the equipment you need?",
+            options: [
+                { text: "Under $1 million", next: "too_small" },
+                { text: "$1–5 million", next: "qualify_revenue" },
+                { text: "$5–15 million", next: "qualify_revenue" },
+                { text: "Over $15 million", next: "qualify_revenue" }
+            ]
+        },
+        too_small: {
+            bot: "For amounts under $1M, ECA financing can be challenging due to the transaction costs involved. However, we sometimes bundle multiple equipment purchases into a single larger package. Would you like to discuss this with our team?",
+            options: [
+                { text: "Yes, let's talk", next: "human" },
+                { text: "What if I combine orders?", next: "qualify_revenue" },
+                { text: "Start over", next: "start" }
+            ]
+        },
+        qualify_revenue: {
+            bot: "Good. And roughly — what is your company's annual revenue?",
+            options: [
+                { text: "Under $20M", next: "qualify_result_possible" },
+                { text: "$20–50M", next: "qualify_result_strong" },
+                { text: "$50–150M", next: "qualify_result_strong" },
+                { text: "Over $150M", next: "qualify_result_strong" }
+            ]
+        },
+        qualify_result_strong: {
+            bot: "Based on what you've told me, you look like a strong fit for ECA-backed financing. Companies in your range — private, established, with clear CAPEX needs — are exactly who this financing is designed for. The next step would be a confidential conversation with our team. We can assess feasibility in about 2 weeks, with no obligation or upfront fees.",
+            options: [
+                { text: "I'd like to talk to your team", next: "human" },
+                { text: "How much can I save?", next: "savings" },
+                { text: "What's the process?", next: "process" }
+            ]
+        },
+        qualify_result_possible: {
+            bot: "Companies under $20M in revenue can sometimes qualify, depending on the specifics — your track record, the project economics, and whether you have hard-currency revenue. It's worth a conversation with our team to assess your situation. No obligation.",
+            options: [
+                { text: "Let's explore it", next: "human" },
+                { text: "What else do I need?", next: "process" },
+                { text: "Start over", next: "start" }
+            ]
+        },
+        savings: {
+            bot: "The savings can be significant. For example, on a $5M equipment purchase, a typical African company might pay ~$127,000/month with a local bank (18%, 3-year term). With ECA financing, that drops to ~$61,000/month (5.5%, 7-year term) — nearly half. Plus you need only 15% upfront instead of 30%. Try our Savings Calculator above for numbers specific to your situation!",
+            options: [
+                { text: "Do I qualify?", next: "qualify_sector" },
+                { text: "What's the process?", next: "process" },
+                { text: "Talk to your team", next: "human" }
+            ]
+        },
+        process: {
+            bot: "The process typically takes 6-12 months:\n\n1. You tell us what equipment you need\n2. We source the best European manufacturers\n3. We structure a financing package with an ECA guarantee\n4. A European bank provides the loan\n5. Equipment is delivered, you repay over 5-8 years\n\nYou deal with one partner (us). We handle all the coordination between manufacturers, banks, and ECAs. Our fee is built into the financing — no upfront cost to you.",
+            options: [
+                { text: "Do I qualify?", next: "qualify_sector" },
+                { text: "Let's get started", next: "human" },
+                { text: "Start over", next: "start" }
+            ]
+        },
+        human: {
+            bot: "You can reach our team at ets@inzag.de — or use the Contact button on this page. Tell us briefly about your company, the equipment you need, and the approximate value. We'll get back to you within a few business days with an initial assessment. Completely confidential, no obligation.",
+            options: [
+                { text: "Start over", next: "start" },
+                { text: "What is ECA financing?", next: "what_is_eca" }
+            ]
+        }
+    };
+
+    function addBotMessage(text) {
+        const msg = document.createElement('div');
+        msg.className = 'chat-msg bot';
+        msg.textContent = text;
+        chatMessages.appendChild(msg);
+    }
+
+    function addUserMessage(text) {
+        const msg = document.createElement('div');
+        msg.className = 'chat-msg user';
+        msg.textContent = text;
+        chatMessages.appendChild(msg);
+    }
+
+    function addOptions(options) {
+        const container = document.createElement('div');
+        container.className = 'chat-options';
+        options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'chat-option';
+            btn.textContent = opt.text;
+            btn.onclick = () => {
+                // Remove option buttons
+                container.remove();
+                addUserMessage(opt.text);
+                setTimeout(() => showStep(opt.next), 400);
+            };
+            container.appendChild(btn);
+        });
+        chatMessages.appendChild(container);
+    }
+
+    function showStep(stepName) {
+        const step = chatFlow[stepName];
+        if (!step) return;
+        addBotMessage(step.bot);
+        if (step.options) {
+            setTimeout(() => {
+                addOptions(step.options);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 300);
+        }
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function toggleChat() {
+        const win = document.getElementById('chatbot-window');
+        win.classList.toggle('open');
+        if (win.classList.contains('open') && chatMessages.children.length === 0) {
+            showStep('start');
+        }
+    }
+
+    function sendMessage() {
+        const input = document.getElementById('chat-input');
+        const text = input.value.trim();
+        if (!text) return;
+        addUserMessage(text);
+        input.value = '';
+
+        // Simple keyword matching for free-text input
+        const lower = text.toLowerCase();
+        setTimeout(() => {
+            if (lower.includes('qualify') || lower.includes('eligible') || lower.includes('can i') || lower.includes('do i')) {
+                showStep('qualify_sector');
+            } else if (lower.includes('save') || lower.includes('cost') || lower.includes('rate') || lower.includes('interest') || lower.includes('cheap')) {
+                showStep('savings');
+            } else if (lower.includes('eca') || lower.includes('what is') || lower.includes('explain') || lower.includes('how does')) {
+                showStep('what_is_eca');
+            } else if (lower.includes('process') || lower.includes('how long') || lower.includes('step') || lower.includes('work')) {
+                showStep('process');
+            } else if (lower.includes('contact') || lower.includes('talk') || lower.includes('email') || lower.includes('human') || lower.includes('call')) {
+                showStep('human');
+            } else if (lower.includes('sector') || lower.includes('mining') || lower.includes('construction') || lower.includes('energy') || lower.includes('manufactur')) {
+                showStep('qualify_sector');
+            } else {
+                addBotMessage("I'm best at answering questions about ECA financing, qualification criteria, and the process. Let me help you with one of these:");
+                addOptions(chatFlow.start.options);
+            }
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }, 500);
+    }
+</script>
+
+</body>
+</html>
