@@ -339,7 +339,7 @@ window.sendMessage = sendMessage;
 function getWhatsAppMessage() {
     // After calculator use
     if (window.INZAG.calcSavings && window.INZAG.calcAmount) {
-        return 'Hi, I calculated savings of ' + window.INZAG.calcSavings + ' on ' + window.INZAG.calcAmount + ' equipment.';
+        return 'Hi, I\'m interested in ECA equipment financing.';
     }
 
     // After readiness assessment

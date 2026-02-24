@@ -1008,6 +1008,38 @@ body {
 
 .wizard-summary-row:last-child { border-bottom: none; }
 
+/* Wizard CTA buttons */
+.wizard-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 2rem;
+    justify-content: center;
+}
+.wizard-cta {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    text-align: center;
+    transition: opacity 0.2s;
+}
+.wizard-cta:hover { opacity: 0.85; }
+.wizard-cta--primary {
+    background: var(--primary);
+    color: #fff;
+}
+.wizard-cta--whatsapp {
+    background: #25D366;
+    color: #fff;
+}
+.wizard-cta--email {
+    background: var(--dark);
+    color: #fff;
+}
+
 /* ===================== ECAs ===================== */
 .ecas {
     padding: 6rem 2rem;
