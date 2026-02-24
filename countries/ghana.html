@@ -176,37 +176,45 @@
                 <div class="calc-field">
                     <label>Equipment Cost (USD)</label>
                     <input type="number" id="calc-amount" value="5000000" min="500000" max="50000000" step="100000">
+                    <div id="calc-amount-display" style="font-size:0.85rem;color:var(--accent);margin-top:0.3rem;font-weight:600">USD 5,000,000</div>
                 </div>
                 <div class="calc-field">
                     <label>Your Country</label>
                     <select id="calc-country">
                         <option value="GH" selected>Ghana (22-30%)</option>
                         <option value="ZA">South Africa (10-14%)</option>
+                        <option value="BW">Botswana (14-18%)</option>
+                        <option value="NA">Namibia (13-17%)</option>
+                        <option value="MZ">Mozambique (18-22%)</option>
+                        <option value="AO">Angola (20-30%)</option>
                         <option value="KE">Kenya (14-17%)</option>
                         <option value="ZM">Zambia (25-29%)</option>
                         <option value="TZ">Tanzania (12-15%)</option>
-                        <option value="MZ">Mozambique (~18-22%)</option>
-                        <option value="CD">DRC (~20-24%)</option>
-                        <option value="BW">Botswana (~14-18%)</option>
-                        <option value="NA">Namibia (~13-17%)</option>
-                        <option value="AO">Angola (~20-30%)</option>
-                        <option value="OTHER">Other African country (~16-20%)</option>
+                        <option value="CD">DRC (20-24%)</option>
+                        <option value="OTHER">Other African country (16-20%)</option>
                     </select>
                 </div>
                 <div class="calc-field">
-                    <label>ECA Interest Rate (%)</label>
+                    <label>ECA Rate — Euribor + margin (%)</label>
                     <input type="number" id="calc-eca-rate" value="5.5" min="3" max="9" step="0.5">
                 </div>
                 <div class="calc-field">
-                    <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer">
-                        <input type="checkbox" id="calc-currency-toggle" onchange="toggleCurrency()" style="width:auto;cursor:pointer">
-                        Show in local currency (GH&#8373;)
-                    </label>
+                    <label>Repayment Period</label>
+                    <select id="calc-eca-term">
+                        <option value="5">5 Years</option>
+                        <option value="6">6 Years</option>
+                        <option value="7" selected>7 Years</option>
+                        <option value="8">8 Years</option>
+                    </select>
                 </div>
-                <button class="btn-primary" onclick="calculateSavings()" style="align-self:flex-start">
-                    Calculate Savings
-                    <i data-lucide="calculator" style="width:18px;height:18px"></i>
-                </button>
+                <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
+                    <button class="btn-primary" onclick="window.calculateSavings()" style="flex:1">
+                        Calculate Savings <i data-lucide="calculator" style="width:18px;height:18px"></i>
+                    </button>
+                    <button class="btn-secondary" id="calc-currency-toggle" style="padding:0.85rem 1rem;color:white">
+                        Show in GHS
+                    </button>
+                </div>
             </div>
             <div class="calc-results" id="calc-results">
                 <h3>Your Comparison</h3>
@@ -214,89 +222,70 @@
                     <div class="calc-compare-col">
                         <h4>Local Bank</h4>
                         <div class="calc-row"><span class="calc-row-label">Financed</span><span class="calc-row-value" id="r-local-financed">—</span></div>
-                        <div class="calc-row"><span class="calc-row-label">Upfront</span><span class="calc-row-value" id="r-local-upfront">—</span></div>
+                        <div class="calc-row"><span class="calc-row-label">Upfront (15%)</span><span class="calc-row-value" id="r-local-upfront">—</span></div>
                         <div class="calc-row"><span class="calc-row-label">Rate</span><span class="calc-row-value" id="r-local-rate">—</span></div>
                         <div class="calc-row"><span class="calc-row-label">Term</span><span class="calc-row-value" id="r-local-term">—</span></div>
-                        <div class="calc-row"><span class="calc-row-label">Monthly</span><span class="calc-row-value" id="r-local-monthly">—</span></div>
+                        <div class="calc-row"><span class="calc-row-label">Monthly Payment</span><span class="calc-row-value" id="r-local-monthly">—</span></div>
                         <div class="calc-row"><span class="calc-row-label">Total Interest</span><span class="calc-row-value" id="r-local-total-interest">—</span></div>
-                        <div class="calc-row"><span class="calc-row-label">Total Cost</span><span class="calc-row-value" id="r-local-total-cost">—</span></div>
+                        <div class="calc-row" style="font-weight:600"><span class="calc-row-label">Total Cost</span><span class="calc-row-value" id="r-local-total-cost">—</span></div>
                     </div>
                     <div class="calc-compare-col eca-col">
                         <h4>ECA-Backed</h4>
                         <div class="calc-row"><span class="calc-row-label">Financed</span><span class="calc-row-value" id="r-eca-financed">—</span></div>
-                        <div class="calc-row"><span class="calc-row-label">Upfront</span><span class="calc-row-value" id="r-eca-upfront">—</span></div>
+                        <div class="calc-row"><span class="calc-row-label">Upfront (15%)</span><span class="calc-row-value" id="r-eca-upfront">—</span></div>
                         <div class="calc-row"><span class="calc-row-label">Rate</span><span class="calc-row-value" id="r-eca-rate">—</span></div>
                         <div class="calc-row"><span class="calc-row-label">Term</span><span class="calc-row-value" id="r-eca-term">—</span></div>
-                        <div class="calc-row"><span class="calc-row-label">Monthly</span><span class="calc-row-value" id="r-eca-monthly">—</span></div>
+                        <div class="calc-row"><span class="calc-row-label">Semi-annual Instalment</span><span class="calc-row-value" id="r-eca-semiannual">—</span></div>
                         <div class="calc-row"><span class="calc-row-label">Total Interest</span><span class="calc-row-value" id="r-eca-total-interest">—</span></div>
-                        <div class="calc-row"><span class="calc-row-label">Total Cost</span><span class="calc-row-value" id="r-eca-total-cost">—</span></div>
+                        <div class="calc-row"><span class="calc-row-label">Insurance Premium</span><span class="calc-row-value" id="r-eca-insurance">—</span></div>
+                        <div class="calc-row" style="font-weight:600"><span class="calc-row-label">Total Cost</span><span class="calc-row-value" id="r-eca-total-cost">—</span></div>
                     </div>
                 </div>
                 <div class="calc-savings">
-                    <div class="calc-savings-label">Estimated Monthly Savings</div>
+                    <div class="calc-savings-label">Estimated Total Savings</div>
                     <div class="calc-savings-amount" id="r-savings">—</div>
-                    <div class="calc-savings-label" id="r-savings-extra"></div>
-                    <div class="calc-savings-label" id="r-savings-total" style="margin-top:0.5rem;font-weight:600;color:#5CDB7F"></div>
                     <div class="calc-savings-label" id="r-savings-annual"></div>
                     <div class="calc-savings-label" id="r-savings-equiv" style="font-style:italic;margin-top:0.3rem"></div>
                 </div>
 
-                <!-- Cost comparison bar chart -->
-                <div style="margin-top:1.5rem">
-                    <div style="font-size:0.8rem;color:rgba(255,255,255,0.5);margin-bottom:0.5rem">Total Cost Comparison</div>
-                    <div style="margin-bottom:0.5rem">
-                        <div style="font-size:0.75rem;color:rgba(255,255,255,0.4);margin-bottom:2px">Local Bank</div>
-                        <div style="background:rgba(255,255,255,0.1);border-radius:4px;height:20px;overflow:hidden">
-                            <div class="cost-bar-local" style="height:100%;background:#C0392B;border-radius:4px;transition:width 0.5s;width:0%"></div>
-                        </div>
+                <div class="cost-bars" style="margin-top:1.5rem">
+                    <div style="margin-bottom:0.8rem">
+                        <div style="display:flex;justify-content:space-between;font-size:0.8rem;color:rgba(255,255,255,0.5);margin-bottom:0.3rem"><span>Local Bank Total Cost</span><span id="r-bar-local-label">—</span></div>
+                        <div style="background:rgba(255,255,255,0.1);border-radius:6px;height:24px;overflow:hidden"><div class="cost-bar-local" style="height:100%;background:#C0392B;border-radius:6px;width:0%;transition:width 0.5s"></div></div>
                     </div>
                     <div>
-                        <div style="font-size:0.75rem;color:rgba(255,255,255,0.4);margin-bottom:2px">ECA-Backed</div>
-                        <div style="background:rgba(255,255,255,0.1);border-radius:4px;height:20px;overflow:hidden">
-                            <div class="cost-bar-eca" style="height:100%;background:var(--accent);border-radius:4px;transition:width 0.5s;width:0%"></div>
-                        </div>
+                        <div style="display:flex;justify-content:space-between;font-size:0.8rem;color:rgba(255,255,255,0.5);margin-bottom:0.3rem"><span>ECA Total Cost</span><span id="r-bar-eca-label">—</span></div>
+                        <div style="background:rgba(255,255,255,0.1);border-radius:6px;height:24px;overflow:hidden"><div class="cost-bar-eca" style="height:100%;background:var(--accent);border-radius:6px;width:0%;transition:width 0.5s"></div></div>
                     </div>
                 </div>
-
-                <!-- Amortization toggle -->
                 <div style="margin-top:1.5rem;text-align:center">
-                    <button id="btn-amortization" onclick="toggleAmortization()" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.7);padding:0.5rem 1.2rem;border-radius:6px;cursor:pointer;font-size:0.85rem;font-family:inherit">Show Amortization Schedule</button>
-                    <button id="btn-share" onclick="shareCalculation()" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.7);padding:0.5rem 1.2rem;border-radius:6px;cursor:pointer;font-size:0.85rem;font-family:inherit;margin-left:0.5rem">Share Calculation</button>
+                    <button class="btn-secondary" onclick="window.toggleAmortization()" style="font-size:0.85rem;padding:0.5rem 1rem;color:white">
+                        <i data-lucide="table" style="width:14px;height:14px"></i> View ECA Repayment Schedule
+                    </button>
                 </div>
-
-                <!-- Amortization schedule (hidden by default) -->
-                <div id="amort-section" style="display:none;margin-top:1.5rem">
-                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.8rem">
-                        <h4 style="font-size:0.95rem;color:var(--accent)">Amortization Schedule</h4>
-                        <button id="amort-toggle-months" onclick="toggleAllMonths()" style="background:none;border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.5);padding:0.3rem 0.8rem;border-radius:4px;cursor:pointer;font-size:0.75rem;font-family:inherit">Show all months</button>
-                    </div>
-                    <div style="overflow-x:auto">
-                        <table style="width:100%;font-size:0.75rem;color:rgba(255,255,255,0.7);border-collapse:collapse">
-                            <thead>
-                                <tr style="border-bottom:1px solid rgba(255,255,255,0.15)">
-                                    <th style="padding:0.4rem;text-align:left">Month</th>
-                                    <th style="padding:0.4rem;text-align:right" colspan="4">Local Bank</th>
-                                    <th style="padding:0.4rem;text-align:right" colspan="4">ECA-Backed</th>
-                                </tr>
-                                <tr style="border-bottom:1px solid rgba(255,255,255,0.1);font-size:0.7rem;color:rgba(255,255,255,0.4)">
-                                    <th></th>
-                                    <th style="padding:0.3rem;text-align:right">Payment</th>
-                                    <th style="padding:0.3rem;text-align:right">Principal</th>
-                                    <th style="padding:0.3rem;text-align:right">Interest</th>
-                                    <th style="padding:0.3rem;text-align:right">Balance</th>
-                                    <th style="padding:0.3rem;text-align:right">Payment</th>
-                                    <th style="padding:0.3rem;text-align:right">Principal</th>
-                                    <th style="padding:0.3rem;text-align:right">Interest</th>
-                                    <th style="padding:0.3rem;text-align:right">Balance</th>
-                                </tr>
-                            </thead>
-                            <tbody id="amort-table-body"></tbody>
-                        </table>
-                    </div>
+                <div id="amort-container" style="display:none;margin-top:1rem;overflow-x:auto">
+                    <p style="font-size:0.8rem;color:rgba(255,255,255,0.5);margin-bottom:0.5rem">Semi-annual repayments — equal principal, declining interest</p>
+                    <table class="amort-table" style="width:100%;font-size:0.75rem;color:rgba(255,255,255,0.7)">
+                        <thead><tr><th>#</th><th>Month</th><th>Outstanding</th><th>Principal</th><th>Interest</th><th>Insurance</th><th>Total</th></tr></thead>
+                        <tbody id="amort-table-body"></tbody>
+                    </table>
                 </div>
-
+                <div style="display:flex;gap:0.5rem;margin-top:1rem;justify-content:center;flex-wrap:wrap">
+                    <button class="btn-secondary share-btn" onclick="window.shareCalculation()" style="font-size:0.8rem;padding:0.4rem 0.8rem;color:white">
+                        <i data-lucide="link" style="width:14px;height:14px"></i> Copy Link
+                    </button>
+                    <button class="btn-secondary" onclick="window.exportPDF()" style="font-size:0.8rem;padding:0.4rem 0.8rem;color:white">
+                        <i data-lucide="printer" style="width:14px;height:14px"></i> Print / PDF
+                    </button>
+                </div>
+                <div class="lead-capture" style="margin-top:1.5rem;padding:1rem;background:rgba(255,255,255,0.05);border-radius:10px;text-align:center">
+                    <p style="font-size:0.85rem;color:rgba(255,255,255,0.6);margin-bottom:0.5rem">Want a personalized proposal?</p>
+                    <a href="mailto:ets@inzag.de?subject=ECA%20Financing%20Inquiry%20-%20Ghana&body=I'm%20interested%20in%20ECA%20financing%20for%20equipment%20in%20Ghana." class="btn-primary" style="font-size:0.85rem;padding:0.5rem 1.2rem">
+                        <i data-lucide="mail" style="width:14px;height:14px"></i> Get a Proposal
+                    </a>
+                </div>
                 <p style="font-size:0.75rem;color:rgba(255,255,255,0.35);margin-top:1rem;text-align:center;">
-                    Illustrative only. Actual terms depend on company profile, equipment origin, and ECA country risk assessment. ECA premiums (1-3%) are not included in this estimate.
+                    Illustrative only. Actual terms depend on company profile, equipment origin, and ECA country risk assessment. Insurance premium estimated at 1.5% p.a.
                 </p>
             </div>
         </div>

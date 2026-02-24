@@ -1,9 +1,11 @@
 /**
- * INZAG ETS - Enhanced Equipment Financing Calculator
+ * INZAG ETS - Equipment Financing Calculator
  * Compares local African bank financing vs European ECA-backed financing.
  *
- * No external dependencies. All functions that need to be called from HTML
- * are attached to the window object.
+ * Local bank  = monthly annuity (equal total payments)
+ * ECA-backed  = semi-annual linear (equal principal + declining interest)
+ *
+ * No external dependencies.
  */
 
 /* ===================================================================
@@ -13,8 +15,6 @@ window.INZAG = window.INZAG || {};
 
 /* ===================================================================
    COUNTRY DATA
-   Each entry contains the local currency info, exchange rate to USD,
-   typical local bank lending rate (%), and typical local loan term (years).
    =================================================================== */
 var COUNTRY_DATA = {
     'ZA': { name: 'South Africa',  currency: 'ZAR', symbol: 'R',    fx: 18.5,  localRate: 12,   localTerm: 4   },
@@ -32,17 +32,16 @@ var COUNTRY_DATA = {
 
 /* ===================================================================
    ECA DEFAULTS
-   European Export Credit Agency-backed financing defaults.
    =================================================================== */
 var ECA_DEFAULTS = {
-    rate: 5.5,   // annual interest rate (%)
-    term: 7,     // loan term (years)
-    down: 15     // down payment (%)
+    rate: 5.5,          // Euribor + margin (%)
+    term: 7,            // repayment term (years)
+    down: 15,           // down payment (%)
+    insuranceRate: 1.5  // ECA insurance premium (% p.a.)
 };
 
 /* ===================================================================
    CURRENCY SYMBOLS LOOKUP
-   Maps ISO currency codes to their display symbols.
    =================================================================== */
 var CURRENCY_SYMBOLS = {
     'USD': '$',
@@ -60,10 +59,7 @@ var CURRENCY_SYMBOLS = {
 
 /* ===================================================================
    STATE
-   Tracks whether the amortization schedule is visible and whether
-   local currency display is active.
    =================================================================== */
-var _showAllMonths = false;
 var _amortVisible = false;
 var _showLocalCurrency = false;
 
@@ -71,86 +67,43 @@ var _showLocalCurrency = false;
    FORMAT FUNCTIONS
    =================================================================== */
 
-/**
- * Format a number as a US Dollar string.
- * @param {number} n - The value to format.
- * @returns {string} Formatted string, e.g. "$5,000,000".
- */
-function formatUSD(n) {
-    if (n == null || isNaN(n)) return '$0';
-    var sign = n < 0 ? '-' : '';
-    var abs = Math.abs(Math.round(n));
-    var str = abs.toString();
+function _addCommas(n) {
+    var str = Math.abs(Math.round(n)).toString();
     var formatted = '';
     var count = 0;
     for (var i = str.length - 1; i >= 0; i--) {
-        if (count > 0 && count % 3 === 0) {
-            formatted = ',' + formatted;
-        }
+        if (count > 0 && count % 3 === 0) formatted = ',' + formatted;
         formatted = str[i] + formatted;
         count++;
     }
-    return sign + '$' + formatted;
+    return formatted;
 }
 
-/**
- * Format a number in the given currency.
- * @param {number} n  - The value to format.
- * @param {string} currency - ISO 4217 currency code (e.g. "ZAR").
- * @returns {string} Formatted string with the appropriate symbol.
- */
+function formatUSD(n) {
+    if (n == null || isNaN(n)) return '$0';
+    return (n < 0 ? '-' : '') + '$' + _addCommas(n);
+}
+
 function formatCurrency(n, currency) {
     if (n == null || isNaN(n)) n = 0;
     var symbol = CURRENCY_SYMBOLS[currency] || '$';
-    var sign = n < 0 ? '-' : '';
-    var abs = Math.abs(Math.round(n));
-    var str = abs.toString();
-    var formatted = '';
-    var count = 0;
-    for (var i = str.length - 1; i >= 0; i--) {
-        if (count > 0 && count % 3 === 0) {
-            formatted = ',' + formatted;
-        }
-        formatted = str[i] + formatted;
-        count++;
-    }
-    return sign + symbol + formatted;
+    return (n < 0 ? '-' : '') + symbol + _addCommas(n);
 }
 
 /* ===================================================================
-   FINANCIAL MATH
+   FINANCIAL MATH — LOCAL BANK (monthly annuity)
    =================================================================== */
 
-/**
- * Standard amortization formula: calculates the fixed monthly payment.
- *
- * M = P * [ r(1+r)^n ] / [ (1+r)^n - 1 ]
- *
- * @param {number} principal  - Loan principal (amount financed).
- * @param {number} annualRate - Annual interest rate as a percentage (e.g. 12 for 12%).
- * @param {number} years      - Loan term in years (can be fractional, e.g. 2.5).
- * @returns {number} Monthly payment amount.
- */
 function monthlyPayment(principal, annualRate, years) {
     if (principal <= 0) return 0;
     if (annualRate <= 0) return principal / (years * 12);
-
-    var r = annualRate / 100 / 12;       // monthly interest rate
-    var n = Math.round(years * 12);       // total number of payments
+    var r = annualRate / 100 / 12;
+    var n = Math.round(years * 12);
     var factor = Math.pow(1 + r, n);
     return principal * (r * factor) / (factor - 1);
 }
 
-/**
- * Generate a full month-by-month amortization schedule.
- *
- * @param {number} principal  - Loan principal.
- * @param {number} annualRate - Annual interest rate (%).
- * @param {number} years      - Loan term in years.
- * @returns {Array<Object>} Array of objects with:
- *   { month, payment, principal, interest, balance }
- */
-function generateAmortization(principal, annualRate, years) {
+function generateLocalAmortization(principal, annualRate, years) {
     var schedule = [];
     var n = Math.round(years * 12);
     var payment = monthlyPayment(principal, annualRate, years);
@@ -160,48 +113,74 @@ function generateAmortization(principal, annualRate, years) {
     for (var m = 1; m <= n; m++) {
         var interestPortion = balance * r;
         var principalPortion = payment - interestPortion;
-
-        // Handle final month rounding
         if (m === n) {
             principalPortion = balance;
             payment = principalPortion + interestPortion;
         }
-
-        balance = balance - principalPortion;
+        balance -= principalPortion;
         if (balance < 0) balance = 0;
-
         schedule.push({
-            month: m,
+            period: m,
             payment: payment,
             principal: principalPortion,
             interest: interestPortion,
             balance: balance
         });
     }
-
     return schedule;
 }
 
 /* ===================================================================
-   HELPER: safely read a DOM element's text / value
+   FINANCIAL MATH — ECA (semi-annual linear amortization)
+   Equal principal repayments every 6 months, interest on remaining
+   balance, plus ECA insurance premium on remaining balance.
    =================================================================== */
 
-/**
- * Set the text content of a DOM element by selector, if it exists.
- * @param {string} selector - CSS selector.
- * @param {string} text     - Text to set.
- */
+function generateEcaSchedule(principal, annualRate, years, insuranceRate) {
+    var nPeriods = years * 2; // semi-annual
+    var equalPrincipal = principal / nPeriods;
+    var schedule = [];
+    var remaining = principal;
+    var totalInterest = 0;
+    var totalInsurance = 0;
+
+    for (var i = 1; i <= nPeriods; i++) {
+        var interest = remaining * (annualRate / 100 / 2);
+        var insurance = remaining * (insuranceRate / 100 / 2);
+        var total = equalPrincipal + interest + insurance;
+
+        totalInterest += interest;
+        totalInsurance += insurance;
+
+        remaining -= equalPrincipal;
+        if (remaining < 1) remaining = 0; // handle rounding
+
+        schedule.push({
+            period: i,
+            principalRepayment: equalPrincipal,
+            interest: interest,
+            insurance: insurance,
+            totalInstalment: total,
+            remainingPrincipal: remaining
+        });
+    }
+
+    return {
+        schedule: schedule,
+        totalInterest: totalInterest,
+        totalInsurance: totalInsurance
+    };
+}
+
+/* ===================================================================
+   DOM HELPERS
+   =================================================================== */
+
 function _setText(selector, text) {
     var el = document.querySelector(selector);
     if (el) el.textContent = text;
 }
 
-/**
- * Read a numeric value from an input element, with a fallback default.
- * @param {string} selector     - CSS selector for the input.
- * @param {number} defaultValue - Fallback if empty or non-numeric.
- * @returns {number}
- */
 function _readNum(selector, defaultValue) {
     var el = document.querySelector(selector);
     if (!el) return defaultValue;
@@ -209,70 +188,42 @@ function _readNum(selector, defaultValue) {
     return isNaN(val) ? defaultValue : val;
 }
 
-/**
- * Get the currently selected country data object.
- * Reads from the #calc-country <select> element's value and data-attributes,
- * falling back to the COUNTRY_DATA lookup.
- * @returns {Object} { countryCode, localRate, localTerm, currency, fx, symbol }
- */
 function _getCountryInfo() {
     var select = document.querySelector('#calc-country');
     if (!select) {
-        return {
-            countryCode: 'OTHER',
-            localRate: 18,
-            localTerm: 3,
-            currency: 'USD',
-            fx: 1,
-            symbol: '$'
-        };
+        return { countryCode: 'OTHER', localRate: 18, localTerm: 3, currency: 'USD', fx: 1, symbol: '$' };
     }
-
     var opt = select.options[select.selectedIndex];
     var code = select.value;
     var data = COUNTRY_DATA[code] || COUNTRY_DATA['OTHER'];
 
-    // Allow the DOM data-attributes to override COUNTRY_DATA if present
-    var localRate = opt && opt.dataset.rate ? parseFloat(opt.dataset.rate) : data.localRate;
-    var localTerm = opt && opt.dataset.term ? parseFloat(opt.dataset.term) : data.localTerm;
-    var currency  = opt && opt.dataset.currency ? opt.dataset.currency : data.currency;
-    var fx        = opt && opt.dataset.fx ? parseFloat(opt.dataset.fx) : data.fx;
-    var symbol    = data.symbol || CURRENCY_SYMBOLS[currency] || '$';
-
     return {
         countryCode: code,
-        localRate: localRate,
-        localTerm: localTerm,
-        currency: currency,
-        fx: fx,
-        symbol: symbol
+        localRate: opt && opt.dataset.rate ? parseFloat(opt.dataset.rate) : data.localRate,
+        localTerm: opt && opt.dataset.term ? parseFloat(opt.dataset.term) : data.localTerm,
+        currency:  opt && opt.dataset.currency ? opt.dataset.currency : data.currency,
+        fx:        opt && opt.dataset.fx ? parseFloat(opt.dataset.fx) : data.fx,
+        symbol:    data.symbol || CURRENCY_SYMBOLS[data.currency] || '$'
     };
+}
+
+function _updateAmountDisplay() {
+    var amount = _readNum('#calc-amount', 0);
+    var el = document.querySelector('#calc-amount-display');
+    if (el) el.textContent = 'USD ' + _addCommas(amount);
 }
 
 /* ===================================================================
    MAIN CALCULATION
    =================================================================== */
 
-/**
- * Main calculation function.
- *
- * Reads all inputs from the DOM, computes local bank vs ECA-backed financing,
- * and writes every result back into the DOM. Also updates the cost comparison
- * bar chart widths and stores key results on window.INZAG.
- */
 function calculateSavings() {
-    // --- Read inputs ---
-    var amount    = _readNum('#calc-amount', 0);
-    var country   = _getCountryInfo();
-    var ecaRate   = _readNum('#calc-eca-rate', ECA_DEFAULTS.rate);
-    var downLocal = 15;
-    var downECA   = 15;
+    var amount  = _readNum('#calc-amount', 0);
+    var country = _getCountryInfo();
+    var ecaRate = _readNum('#calc-eca-rate', ECA_DEFAULTS.rate);
+    var ecaTerm = _readNum('#calc-eca-term', ECA_DEFAULTS.term);
 
-    // Equipment type (optional, for display purposes only)
-    var equipTypeEl = document.querySelector('#calc-equipment-type');
-    var equipType   = equipTypeEl ? equipTypeEl.value : '';
-
-    // Determine which format function and currency to use
+    // Format function
     var fx       = country.fx;
     var currency = country.currency;
     var fmt;
@@ -282,64 +233,57 @@ function calculateSavings() {
         fmt = formatUSD;
     }
 
-    // --- Local bank calculations ---
+    // Update formatted cost display
+    _updateAmountDisplay();
+
+    // --- LOCAL BANK (monthly annuity) ---
     var localRate      = country.localRate;
     var localTerm      = country.localTerm;
-    var localFinanced  = amount * (1 - downLocal / 100);
-    var localUpfront   = amount * (downLocal / 100);
+    var localFinanced  = amount * 0.85;
+    var localUpfront   = amount * 0.15;
     var localMonthly   = monthlyPayment(localFinanced, localRate, localTerm);
     var localMonths    = Math.round(localTerm * 12);
     var localTotalPaid = localMonthly * localMonths;
     var localTotalInt  = localTotalPaid - localFinanced;
     var localTotalCost = localUpfront + localTotalPaid;
 
-    // --- ECA-backed calculations ---
-    var ecaTerm      = ECA_DEFAULTS.term;
-    var ecaFinanced  = amount * (1 - downECA / 100);
-    var ecaUpfront   = amount * (downECA / 100);
-    var ecaMonthly   = monthlyPayment(ecaFinanced, ecaRate, ecaTerm);
-    var ecaMonths    = Math.round(ecaTerm * 12);
-    var ecaTotalPaid = ecaMonthly * ecaMonths;
-    var ecaTotalInt  = ecaTotalPaid - ecaFinanced;
-    var ecaTotalCost = ecaUpfront + ecaTotalPaid;
+    // --- ECA-BACKED (semi-annual linear) ---
+    var ecaFinanced   = amount * 0.85;
+    var ecaUpfront    = amount * 0.15;
+    var ecaResult     = generateEcaSchedule(ecaFinanced, ecaRate, ecaTerm, ECA_DEFAULTS.insuranceRate);
+    var ecaTotalInt   = ecaResult.totalInterest;
+    var ecaTotalIns   = ecaResult.totalInsurance;
+    var ecaFirstInst  = ecaResult.schedule[0].totalInstalment;
+    var ecaTotalCost  = ecaUpfront + ecaFinanced + ecaTotalInt + ecaTotalIns;
 
-    // --- Savings ---
-    var monthlySavings = localMonthly - ecaMonthly;
-    var totalSavings   = localTotalCost - ecaTotalCost;
-    var annualSavings  = monthlySavings * 12;
-    var upfrontSaved   = localUpfront - ecaUpfront;
+    // --- SAVINGS ---
+    var totalSavings  = localTotalCost - ecaTotalCost;
+    var annualSavings = totalSavings / Math.max(localTerm, ecaTerm);
 
-    // --- Update DOM: Local bank results ---
-    _setText('#r-local-financed',      fmt(localFinanced));
-    _setText('#r-local-upfront',       fmt(localUpfront));
-    _setText('#r-local-rate',          localRate.toFixed(1) + '%');
-    _setText('#r-local-term',          localTerm + ' years');
-    _setText('#r-local-monthly',       fmt(localMonthly));
-    _setText('#r-local-total-interest', fmt(localTotalInt));
-    _setText('#r-local-total-cost',    fmt(localTotalCost));
+    // --- UPDATE DOM: Local bank ---
+    _setText('#r-local-financed',       fmt(localFinanced));
+    _setText('#r-local-upfront',        fmt(localUpfront));
+    _setText('#r-local-rate',           localRate.toFixed(1) + '%');
+    _setText('#r-local-term',           localTerm + ' yrs');
+    _setText('#r-local-monthly',        fmt(localMonthly));
+    _setText('#r-local-total-interest',  fmt(localTotalInt));
+    _setText('#r-local-total-cost',     fmt(localTotalCost));
 
-    // --- Update DOM: ECA results ---
-    _setText('#r-eca-financed',      fmt(ecaFinanced));
-    _setText('#r-eca-upfront',       fmt(ecaUpfront));
-    _setText('#r-eca-rate',          ecaRate.toFixed(1) + '%');
-    _setText('#r-eca-term',          ecaTerm + ' years');
-    _setText('#r-eca-monthly',       fmt(ecaMonthly));
-    _setText('#r-eca-total-interest', fmt(ecaTotalInt));
-    _setText('#r-eca-total-cost',    fmt(ecaTotalCost));
+    // --- UPDATE DOM: ECA ---
+    _setText('#r-eca-financed',       fmt(ecaFinanced));
+    _setText('#r-eca-upfront',        fmt(ecaUpfront));
+    _setText('#r-eca-rate',           ecaRate.toFixed(1) + '%');
+    _setText('#r-eca-term',           ecaTerm + ' yrs');
+    _setText('#r-eca-semiannual',     fmt(ecaFirstInst));
+    _setText('#r-eca-total-interest',  fmt(ecaTotalInt));
+    _setText('#r-eca-insurance',      fmt(ecaTotalIns));
+    _setText('#r-eca-total-cost',     fmt(ecaTotalCost));
 
-    // --- Update DOM: Savings ---
-    _setText('#r-savings',        fmt(monthlySavings));
-    _setText('#r-savings-total',  fmt(totalSavings));
-    _setText('#r-savings-annual', fmt(annualSavings));
+    // --- UPDATE DOM: Savings ---
+    _setText('#r-savings',        fmt(totalSavings));
+    _setText('#r-savings-annual', fmt(annualSavings) + ' / year');
 
-    // "Plus $X less upfront capital needed"
-    if (upfrontSaved > 0) {
-        _setText('#r-savings-extra', 'Plus ' + fmt(upfrontSaved) + ' less upfront capital needed');
-    } else {
-        _setText('#r-savings-extra', '');
-    }
-
-    // Equivalency line (approximate: a heavy truck ~$150k, light truck ~$80k)
+    // Equivalency
     var equivTrucks = Math.floor(totalSavings / 150000);
     if (equivTrucks >= 2) {
         _setText('#r-savings-equiv', "That\u2019s enough to buy " + equivTrucks + ' additional trucks');
@@ -355,52 +299,36 @@ function calculateSavings() {
         }
     }
 
-    // --- Update cost comparison bar chart ---
-    var maxCost = Math.max(localTotalCost, ecaTotalCost, 1); // avoid division by zero
+    // --- Cost comparison bars ---
+    var maxCost = Math.max(localTotalCost, ecaTotalCost, 1);
     var localBarEl = document.querySelector('.cost-bar-local');
     var ecaBarEl   = document.querySelector('.cost-bar-eca');
     if (localBarEl) localBarEl.style.width = ((localTotalCost / maxCost) * 100).toFixed(1) + '%';
     if (ecaBarEl)   ecaBarEl.style.width   = ((ecaTotalCost / maxCost) * 100).toFixed(1) + '%';
 
-    // --- Store results on global namespace ---
+    // Store for WhatsApp message
     window.INZAG.calcSavings = totalSavings;
     window.INZAG.calcAmount  = amount;
 
-    // If amortization is already visible, refresh it
-    if (_amortVisible) {
-        _renderAmortizationTable();
-    }
+    // Refresh amortization if visible
+    if (_amortVisible) _renderAmortizationTable();
 }
 
 /* ===================================================================
    AMORTIZATION SCHEDULE
+   Shows ECA semi-annual repayment schedule (like the bank reference).
    =================================================================== */
 
-/**
- * Render the amortization table into #amort-table-body.
- * Shows local bank and ECA schedules side by side.
- * By default only every 12th month (annual summary) is displayed;
- * the _showAllMonths flag toggles full monthly detail.
- * @private
- */
 function _renderAmortizationTable() {
     var tbody = document.querySelector('#amort-table-body');
     if (!tbody) return;
 
-    // Read current values
-    var amount    = _readNum('#calc-amount', 0);
-    var country   = _getCountryInfo();
-    var ecaRate   = _readNum('#calc-eca-rate', ECA_DEFAULTS.rate);
-    var downLocal = 15;
-    var downECA   = 15;
+    var amount  = _readNum('#calc-amount', 0);
+    var country = _getCountryInfo();
+    var ecaRate = _readNum('#calc-eca-rate', ECA_DEFAULTS.rate);
+    var ecaTerm = _readNum('#calc-eca-term', ECA_DEFAULTS.term);
+    var ecaFinanced = amount * 0.85;
 
-    var localFinanced = amount * (1 - downLocal / 100);
-    var ecaFinanced   = amount * (1 - downECA / 100);
-
-    var localSchedule = generateAmortization(localFinanced, country.localRate, country.localTerm);
-    var ecaSchedule   = generateAmortization(ecaFinanced, ecaRate, ECA_DEFAULTS.term);
-
-    // Determine currency formatting
     var fx       = country.fx;
     var currency = country.currency;
     var fmt;
@@ -410,101 +338,58 @@ function _renderAmortizationTable() {
         fmt = formatUSD;
     }
 
-    // Determine the maximum number of months across both schedules
-    var maxMonths = Math.max(localSchedule.length, ecaSchedule.length);
+    var ecaResult = generateEcaSchedule(ecaFinanced, ecaRate, ecaTerm, ECA_DEFAULTS.insuranceRate);
 
     var html = '';
-    for (var i = 0; i < maxMonths; i++) {
-        // Skip non-12th months unless "show all" is active
-        if (!_showAllMonths && (i + 1) % 12 !== 0 && i !== 0 && i !== maxMonths - 1) {
-            continue;
-        }
-
-        var local = localSchedule[i] || null;
-        var eca   = ecaSchedule[i]   || null;
-
+    for (var i = 0; i < ecaResult.schedule.length; i++) {
+        var row = ecaResult.schedule[i];
+        var monthLabel = (row.period * 6);
         html += '<tr>';
-
-        // Month number
-        html += '<td>' + (i + 1) + '</td>';
-
-        // Local bank columns
-        if (local) {
-            html += '<td>' + fmt(local.payment)   + '</td>';
-            html += '<td>' + fmt(local.principal)  + '</td>';
-            html += '<td>' + fmt(local.interest)   + '</td>';
-            html += '<td>' + fmt(local.balance)    + '</td>';
-        } else {
-            html += '<td colspan="4" style="text-align:center;color:#999;">Paid off</td>';
-        }
-
-        // ECA columns
-        if (eca) {
-            html += '<td>' + fmt(eca.payment)   + '</td>';
-            html += '<td>' + fmt(eca.principal)  + '</td>';
-            html += '<td>' + fmt(eca.interest)   + '</td>';
-            html += '<td>' + fmt(eca.balance)    + '</td>';
-        } else {
-            html += '<td colspan="4" style="text-align:center;color:#999;">Paid off</td>';
-        }
-
+        html += '<td>' + row.period + '</td>';
+        html += '<td>' + monthLabel + '</td>';
+        html += '<td>' + fmt(row.remainingPrincipal + row.principalRepayment) + '</td>';
+        html += '<td>' + fmt(row.principalRepayment) + '</td>';
+        html += '<td>' + fmt(row.interest) + '</td>';
+        html += '<td>' + fmt(row.insurance) + '</td>';
+        html += '<td>' + fmt(row.totalInstalment) + '</td>';
         html += '</tr>';
     }
 
-    tbody.innerHTML = html;
+    // Totals row
+    html += '<tr style="font-weight:600;border-top:2px solid rgba(255,255,255,0.3)">';
+    html += '<td colspan="3">Total</td>';
+    html += '<td>' + fmt(ecaFinanced) + '</td>';
+    html += '<td>' + fmt(ecaResult.totalInterest) + '</td>';
+    html += '<td>' + fmt(ecaResult.totalInsurance) + '</td>';
+    html += '<td>' + fmt(ecaFinanced + ecaResult.totalInterest + ecaResult.totalInsurance) + '</td>';
+    html += '</tr>';
 
-    // Update the toggle label
-    var toggleLabel = document.querySelector('#amort-toggle-months');
-    if (toggleLabel) {
-        toggleLabel.textContent = _showAllMonths ? 'Show annual summary' : 'Show all months';
-    }
+    tbody.innerHTML = html;
 }
 
-/**
- * Toggle visibility of the amortization schedule section.
- * When shown for the first time (or after recalculation), the table is
- * generated / refreshed.
- */
 function toggleAmortization() {
     var section = document.querySelector('#amort-container') || document.querySelector('#amort-section');
     if (!section) return;
-
     _amortVisible = !_amortVisible;
     section.style.display = _amortVisible ? 'block' : 'none';
-
-    if (_amortVisible) {
-        _renderAmortizationTable();
-    }
-}
-
-/**
- * Toggle between showing every month and showing only annual summaries
- * in the amortization table.
- */
-function toggleAllMonths() {
-    _showAllMonths = !_showAllMonths;
-    _renderAmortizationTable();
+    if (_amortVisible) _renderAmortizationTable();
 }
 
 /* ===================================================================
    CURRENCY TOGGLE
    =================================================================== */
 
-/**
- * Toggle between USD and local currency display.
- * Flips the checkbox state and re-runs the full calculation so all
- * displayed values update accordingly.
- */
 function toggleCurrency() {
     var el = document.querySelector('#calc-currency-toggle');
     if (el && el.type === 'checkbox') {
-        // Checkbox on country pages — read its state
         _showLocalCurrency = el.checked;
     } else {
-        // Button on index / south-africa — toggle manually
         _showLocalCurrency = !_showLocalCurrency;
+        var country = _getCountryInfo();
         if (el) {
-            el.textContent = _showLocalCurrency ? 'Show in USD' : 'Show in Local Currency';
+            el.textContent = _showLocalCurrency
+                ? 'Show in USD'
+                : ('Show in ' + country.currency);
         }
     }
     calculateSavings();
@@ -514,24 +399,21 @@ function toggleCurrency() {
    SHARE CALCULATION
    =================================================================== */
 
-/**
- * Encode the current calculator inputs into URL query parameters,
- * copy the resulting URL to the clipboard, and show a brief tooltip.
- */
 function shareCalculation() {
-    var amount    = _readNum('#calc-amount', 0);
-    var country   = _getCountryInfo();
-    var ecaRate   = _readNum('#calc-eca-rate', ECA_DEFAULTS.rate);
+    var amount  = _readNum('#calc-amount', 0);
+    var country = _getCountryInfo();
+    var ecaRate = _readNum('#calc-eca-rate', ECA_DEFAULTS.rate);
+    var ecaTerm = _readNum('#calc-eca-term', ECA_DEFAULTS.term);
 
     var params = [
-        'amount='    + encodeURIComponent(amount),
-        'country='   + encodeURIComponent(country.countryCode),
-        'rate='      + encodeURIComponent(ecaRate)
+        'amount='  + encodeURIComponent(amount),
+        'country=' + encodeURIComponent(country.countryCode),
+        'rate='    + encodeURIComponent(ecaRate),
+        'term='    + encodeURIComponent(ecaTerm)
     ];
 
     var url = window.location.origin + window.location.pathname + '?' + params.join('&');
 
-    // Copy to clipboard
     if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(url).then(function () {
             _showShareTooltip('Link copied!');
@@ -543,12 +425,6 @@ function shareCalculation() {
     }
 }
 
-/**
- * Fallback copy method for older browsers that don't support
- * navigator.clipboard.
- * @param {string} text - Text to copy.
- * @private
- */
 function _fallbackCopy(text) {
     var textarea = document.createElement('textarea');
     textarea.value = text;
@@ -565,17 +441,9 @@ function _fallbackCopy(text) {
     document.body.removeChild(textarea);
 }
 
-/**
- * Display a brief "Link copied!" tooltip near the share button.
- * Auto-hides after 2 seconds.
- * @param {string} message - Message to display.
- * @private
- */
 function _showShareTooltip(message) {
     var btn = document.querySelector('#btn-share');
     if (!btn) return;
-
-    // Reuse or create tooltip element
     var tip = document.querySelector('#share-tooltip');
     if (!tip) {
         tip = document.createElement('span');
@@ -587,27 +455,19 @@ function _showShareTooltip(message) {
         btn.style.position = 'relative';
         btn.appendChild(tip);
     }
-
     tip.textContent = message;
     tip.style.opacity = '1';
     tip.style.top = '-36px';
     tip.style.left = '50%';
     tip.style.transform = 'translateX(-50%)';
-
     clearTimeout(tip._hideTimer);
-    tip._hideTimer = setTimeout(function () {
-        tip.style.opacity = '0';
-    }, 2000);
+    tip._hideTimer = setTimeout(function () { tip.style.opacity = '0'; }, 2000);
 }
 
 /* ===================================================================
    EXPORT / PRINT
    =================================================================== */
 
-/**
- * Trigger a browser print dialog. The page's print CSS (in styles.css)
- * is expected to isolate the calculator results for a clean PDF export.
- */
 function exportPDF() {
     window.print();
 }
@@ -616,23 +476,19 @@ function exportPDF() {
    INITIALIZATION
    =================================================================== */
 
-/**
- * Read URL query parameters and pre-fill the calculator form inputs.
- * @private
- */
 function _prefillFromURL() {
     var params = new URLSearchParams(window.location.search);
+    var amountEl  = document.querySelector('#calc-amount');
+    var countryEl = document.querySelector('#calc-country');
+    var ecaRateEl = document.querySelector('#calc-eca-rate');
+    var ecaTermEl = document.querySelector('#calc-eca-term');
 
-    var amountEl    = document.querySelector('#calc-amount');
-    var countryEl   = document.querySelector('#calc-country');
-    var ecaRateEl   = document.querySelector('#calc-eca-rate');
-
-    if (params.has('amount')    && amountEl)    amountEl.value    = params.get('amount');
-    if (params.has('rate')      && ecaRateEl)   ecaRateEl.value   = params.get('rate');
+    if (params.has('amount') && amountEl)   amountEl.value  = params.get('amount');
+    if (params.has('rate')   && ecaRateEl)  ecaRateEl.value = params.get('rate');
+    if (params.has('term')   && ecaTermEl)  ecaTermEl.value = params.get('term');
 
     if (params.has('country') && countryEl) {
         var code = params.get('country');
-        // Set the <select> to the matching option
         for (var i = 0; i < countryEl.options.length; i++) {
             if (countryEl.options[i].value === code) {
                 countryEl.selectedIndex = i;
@@ -642,77 +498,69 @@ function _prefillFromURL() {
     }
 }
 
-/**
- * Initialize the calculator.
- *
- * Called on DOMContentLoaded when the #calc-amount input is present on the
- * page. Sets up all event listeners, pre-fills from URL params if present,
- * and runs the initial calculation.
- */
 function initCalculator() {
     var amountEl = document.querySelector('#calc-amount');
-    if (!amountEl) return; // Calculator not on this page
+    if (!amountEl) return;
 
-    // Pre-fill form from URL query params (e.g. shared links)
     _prefillFromURL();
 
-    // --- Attach event listeners to all calculator inputs ---
-    var inputIds = [
-        '#calc-amount',
-        '#calc-eca-rate'
-    ];
-
-    inputIds.forEach(function (sel) {
+    // Input listeners
+    var inputs = ['#calc-amount', '#calc-eca-rate'];
+    inputs.forEach(function (sel) {
         var el = document.querySelector(sel);
-        if (el) {
-            el.addEventListener('input', calculateSavings);
-        }
+        if (el) el.addEventListener('input', calculateSavings);
     });
 
-    // Country select - fires on change
-    var countryEl = document.querySelector('#calc-country');
-    if (countryEl) {
-        countryEl.addEventListener('change', calculateSavings);
-    }
+    // Selects
+    ['#calc-country', '#calc-equipment-type', '#calc-eca-term'].forEach(function (sel) {
+        var el = document.querySelector(sel);
+        if (el) el.addEventListener('change', calculateSavings);
+    });
 
-    // Equipment type select (optional) - fires on change
-    var equipEl = document.querySelector('#calc-equipment-type');
-    if (equipEl) {
-        equipEl.addEventListener('change', calculateSavings);
-    }
-
-    // Currency toggle — checkbox (country pages) or button (index/SA)
+    // Currency toggle (only addEventListener — no onclick in HTML)
     var currToggle = document.querySelector('#calc-currency-toggle');
     if (currToggle) {
-        var currEvent = (currToggle.type === 'checkbox') ? 'change' : 'click';
-        currToggle.addEventListener(currEvent, toggleCurrency);
+        var evt = (currToggle.type === 'checkbox') ? 'change' : 'click';
+        currToggle.addEventListener(evt, toggleCurrency);
     }
 
-    // Amortization toggle button (country pages use #btn-amortization)
-    var amortBtn = document.querySelector('#btn-amortization');
-    if (amortBtn) {
-        amortBtn.addEventListener('click', toggleAmortization);
+    // Update currency button label to show actual currency
+    if (currToggle && currToggle.type !== 'checkbox') {
+        var country = _getCountryInfo();
+        currToggle.textContent = 'Show in ' + country.currency;
+        // Update label when country changes
+        var countryEl = document.querySelector('#calc-country');
+        if (countryEl) {
+            countryEl.addEventListener('change', function () {
+                if (!_showLocalCurrency) {
+                    var c = _getCountryInfo();
+                    currToggle.textContent = 'Show in ' + c.currency;
+                }
+            });
+        }
     }
+
+    // Amortization toggle
+    var amortBtn = document.querySelector('#btn-amortization');
+    if (amortBtn) amortBtn.addEventListener('click', toggleAmortization);
 
     // Share button
     var shareBtn = document.querySelector('#btn-share');
-    if (shareBtn) {
-        shareBtn.addEventListener('click', shareCalculation);
-    }
+    if (shareBtn) shareBtn.addEventListener('click', shareCalculation);
 
-    // Export/Print button
+    // Export/Print
     var exportBtn = document.querySelector('#btn-export');
-    if (exportBtn) {
-        exportBtn.addEventListener('click', exportPDF);
-    }
+    if (exportBtn) exportBtn.addEventListener('click', exportPDF);
 
-    // --- Run the initial calculation ---
+    // Format cost display on input
+    amountEl.addEventListener('input', _updateAmountDisplay);
+
+    // Initial calculation
     calculateSavings();
 }
 
 /* ===================================================================
-   ATTACH PUBLIC FUNCTIONS TO WINDOW
-   These are callable from inline HTML event handlers (onclick, etc.).
+   PUBLIC API
    =================================================================== */
 window.calculateSavings   = calculateSavings;
 window.toggleAmortization = toggleAmortization;
@@ -721,12 +569,10 @@ window.shareCalculation   = shareCalculation;
 window.exportPDF          = exportPDF;
 
 /* ===================================================================
-   AUTO-INIT ON DOM READY
-   Guarded: only runs if the calculator form is present on the page.
+   AUTO-INIT
    =================================================================== */
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initCalculator);
 } else {
-    // DOM is already ready (script loaded with defer or at end of body)
     initCalculator();
 }
