@@ -12,7 +12,7 @@ window.INZAG = window.INZAG || {};
 window.INZAG.calcSavings    = null;   // set by calculator after calculation (e.g. "$66,000/mo")
 window.INZAG.calcAmount     = null;   // set by calculator after calculation (e.g. "$5,000,000")
 window.INZAG.readinessResult = null;  // set by readiness wizard after completion (e.g. "Excellent Fit")
-window.INZAG.whatsappNumber  = '4961195001460';
+window.INZAG.whatsappNumber  = '4961195001466';
 
 
 /* =====================================================================
@@ -187,7 +187,7 @@ var chatFlow = {
         ]
     },
     human: {
-        bot: "You can reach our team at ets@inzag.de \u2014 or use the Contact button on this page. Tell us briefly about your company, the equipment you need, and the approximate value. We\u2019ll get back to you within a few business days with an initial assessment. Completely confidential, no obligation.",
+        bot: "You can reach our team at ETS@INZAG.de \u2014 or use the Contact button on this page. Tell us briefly about your company, the equipment you need, and the approximate value. We\u2019ll get back to you within a few business days with an initial assessment. Completely confidential, no obligation.",
         options: [
             { text: "Start over",               next: "start" },
             { text: "What is ECA financing?",    next: "what_is_eca" }
