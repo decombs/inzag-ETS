@@ -33,7 +33,7 @@ Navigate to **Settings > Business tools > Business profile** and fill in the fol
 | **Business Name**  | INZAG ETS                                                             |
 | **Category**       | Financial Services (or Business Service)                              |
 | **Description**    | We help African businesses access European government-backed equipment financing (ECA financing) at 4-7% interest rates. Mining, construction, manufacturing, energy, and logistics equipment from European manufacturers with 5-8 year repayment terms and only 15% down payment. |
-| **Address**        | Frankfurt, Germany                                                    |
+| **Address**        | Taunusstraße 5, 65183 Wiesbaden, Germany                              |
 | **Email**          | ets@inzag.de                                                          |
 | **Website**        | *(Enter the INZAG ETS website URL when available)*                    |
 
@@ -65,14 +65,17 @@ Navigate to **Settings > Business tools > Greeting message** and enable it.
 **Message:**
 
 ```
-Welcome to INZAG ETS! We help African businesses access European government-backed equipment financing at 4-7% interest rates. How can we help you today?
+Welcome to INZAG ETS!
 
-You can type any of the following for quick answers:
-/qualify - Eligibility requirements
-/rates - Interest rates & terms
-/process - How it works
-/sectors - Industries we serve
-/contact - Contact information
+European equipment financing for African businesses — government-backed, 4-7% rates, 5-8 year terms, only 15% down.
+
+How can we help?
+1 - Check if you qualify
+2 - See interest rates & terms
+3 - Learn how it works
+4 - Talk to our team
+
+Just reply with a number or type your question!
 ```
 
 ### Away Message
@@ -147,7 +150,8 @@ Which sector is your business in?
 
 ```
 Email: ets@inzag.de
-Location: Frankfurt, Germany
+Phone: +49 611 950014 60
+Location: Taunusstraße 5, 65183 Wiesbaden, Germany
 Hours: Mon-Fri, 9 AM - 6 PM CET
 
 We typically respond within 1-2 business days.
