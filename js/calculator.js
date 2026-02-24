@@ -305,6 +305,8 @@ function calculateSavings() {
     var ecaBarEl   = document.querySelector('.cost-bar-eca');
     if (localBarEl) localBarEl.style.width = ((localTotalCost / maxCost) * 100).toFixed(1) + '%';
     if (ecaBarEl)   ecaBarEl.style.width   = ((ecaTotalCost / maxCost) * 100).toFixed(1) + '%';
+    _setText('#r-bar-local-label', fmt(localTotalCost));
+    _setText('#r-bar-eca-label',   fmt(ecaTotalCost));
 
     // Store for WhatsApp message
     window.INZAG.calcSavings = totalSavings;
@@ -442,7 +444,7 @@ function _fallbackCopy(text) {
 }
 
 function _showShareTooltip(message) {
-    var btn = document.querySelector('#btn-share');
+    var btn = document.querySelector('.share-btn');
     if (!btn) return;
     var tip = document.querySelector('#share-tooltip');
     if (!tip) {
@@ -539,18 +541,6 @@ function initCalculator() {
             });
         }
     }
-
-    // Amortization toggle
-    var amortBtn = document.querySelector('#btn-amortization');
-    if (amortBtn) amortBtn.addEventListener('click', toggleAmortization);
-
-    // Share button
-    var shareBtn = document.querySelector('#btn-share');
-    if (shareBtn) shareBtn.addEventListener('click', shareCalculation);
-
-    // Export/Print
-    var exportBtn = document.querySelector('#btn-export');
-    if (exportBtn) exportBtn.addEventListener('click', exportPDF);
 
     // Format cost display on input
     amountEl.addEventListener('input', _updateAmountDisplay);
