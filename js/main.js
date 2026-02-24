@@ -12,7 +12,7 @@ window.INZAG = window.INZAG || {};
 window.INZAG.calcSavings    = null;   // set by calculator after calculation (e.g. "$66,000/mo")
 window.INZAG.calcAmount     = null;   // set by calculator after calculation (e.g. "$5,000,000")
 window.INZAG.readinessResult = null;  // set by readiness wizard after completion (e.g. "Excellent Fit")
-window.INZAG.whatsappNumber  = '4961195001460';
+window.INZAG.whatsappNumber  = '4961195001466';
 
 
 /* =====================================================================
@@ -120,16 +120,7 @@ var chatFlow = {
         ]
     },
     qualify_sector: {
-        bot: "Let\u2019s do a quick check. First \u2014 what sector is your business in?",
-        options: [
-            { text: "Mining & Resources",              next: "qualify_size" },
-            { text: "Construction",                    next: "qualify_size" },
-            { text: "Manufacturing",                   next: "qualify_size" },
-            { text: "Energy / Utilities / Logistics",  next: "qualify_size" }
-        ]
-    },
-    qualify_size: {
-        bot: "Great, that sector fits well. Now \u2014 roughly how much is the equipment you need?",
+        bot: "Let\u2019s do a quick check. Roughly how much is the equipment you need?",
         options: [
             { text: "Under $1 million", next: "too_small" },
             { text: "$1\u20135 million",    next: "qualify_revenue" },
@@ -187,7 +178,7 @@ var chatFlow = {
         ]
     },
     human: {
-        bot: "You can reach our team at ets@inzag.de \u2014 or use the Contact button on this page. Tell us briefly about your company, the equipment you need, and the approximate value. We\u2019ll get back to you within a few business days with an initial assessment. Completely confidential, no obligation.",
+        bot: "You can reach our team at ETS@INZAG.de \u2014 or use the Contact button on this page. Tell us briefly about your company, the equipment you need, and the approximate value. We\u2019ll get back to you within a few business days with an initial assessment. Completely confidential, no obligation.",
         options: [
             { text: "Start over",               next: "start" },
             { text: "What is ECA financing?",    next: "what_is_eca" }

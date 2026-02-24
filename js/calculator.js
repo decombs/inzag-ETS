@@ -265,16 +265,12 @@ function calculateSavings() {
     var amount    = _readNum('#calc-amount', 0);
     var country   = _getCountryInfo();
     var ecaRate   = _readNum('#calc-eca-rate', ECA_DEFAULTS.rate);
-    var downLocal = _readNum('#calc-down-local', 30);
-    var downECA   = _readNum('#calc-down-eca', ECA_DEFAULTS.down);
+    var downLocal = 15;
+    var downECA   = 15;
 
     // Equipment type (optional, for display purposes only)
     var equipTypeEl = document.querySelector('#calc-equipment-type');
     var equipType   = equipTypeEl ? equipTypeEl.value : '';
-
-    // Currency toggle state
-    var currToggle = document.querySelector('#calc-currency-toggle');
-    _showLocalCurrency = currToggle ? currToggle.checked : false;
 
     // Determine which format function and currency to use
     var fx       = country.fx;
@@ -395,8 +391,8 @@ function _renderAmortizationTable() {
     var amount    = _readNum('#calc-amount', 0);
     var country   = _getCountryInfo();
     var ecaRate   = _readNum('#calc-eca-rate', ECA_DEFAULTS.rate);
-    var downLocal = _readNum('#calc-down-local', 30);
-    var downECA   = _readNum('#calc-down-eca', ECA_DEFAULTS.down);
+    var downLocal = 15;
+    var downECA   = 15;
 
     var localFinanced = amount * (1 - downLocal / 100);
     var ecaFinanced   = amount * (1 - downECA / 100);
@@ -405,8 +401,6 @@ function _renderAmortizationTable() {
     var ecaSchedule   = generateAmortization(ecaFinanced, ecaRate, ECA_DEFAULTS.term);
 
     // Determine currency formatting
-    var currToggle = document.querySelector('#calc-currency-toggle');
-    _showLocalCurrency = currToggle ? currToggle.checked : false;
     var fx       = country.fx;
     var currency = country.currency;
     var fmt;
@@ -472,17 +466,11 @@ function _renderAmortizationTable() {
  * generated / refreshed.
  */
 function toggleAmortization() {
-    var section = document.querySelector('#amort-section');
+    var section = document.querySelector('#amort-container');
     if (!section) return;
 
     _amortVisible = !_amortVisible;
     section.style.display = _amortVisible ? 'block' : 'none';
-
-    // Update button text
-    var btn = document.querySelector('#btn-amortization');
-    if (btn) {
-        btn.textContent = _amortVisible ? 'Hide Amortization Schedule' : 'Show Amortization Schedule';
-    }
 
     if (_amortVisible) {
         _renderAmortizationTable();
@@ -508,12 +496,10 @@ function toggleAllMonths() {
  * displayed values update accordingly.
  */
 function toggleCurrency() {
-    var currToggle = document.querySelector('#calc-currency-toggle');
-    if (currToggle) {
-        // If called directly (not from checkbox change), flip the value
-        if (typeof event === 'undefined' || (event && event.target !== currToggle)) {
-            currToggle.checked = !currToggle.checked;
-        }
+    _showLocalCurrency = !_showLocalCurrency;
+    var btn = document.querySelector('#calc-currency-toggle');
+    if (btn) {
+        btn.textContent = _showLocalCurrency ? 'Show in USD' : 'Show in Local Currency';
     }
     calculateSavings();
 }
@@ -530,15 +516,11 @@ function shareCalculation() {
     var amount    = _readNum('#calc-amount', 0);
     var country   = _getCountryInfo();
     var ecaRate   = _readNum('#calc-eca-rate', ECA_DEFAULTS.rate);
-    var downLocal = _readNum('#calc-down-local', 30);
-    var downECA   = _readNum('#calc-down-eca', ECA_DEFAULTS.down);
 
     var params = [
         'amount='    + encodeURIComponent(amount),
         'country='   + encodeURIComponent(country.countryCode),
-        'rate='      + encodeURIComponent(ecaRate),
-        'downLocal=' + encodeURIComponent(downLocal),
-        'downECA='   + encodeURIComponent(downECA)
+        'rate='      + encodeURIComponent(ecaRate)
     ];
 
     var url = window.location.origin + window.location.pathname + '?' + params.join('&');
@@ -638,13 +620,9 @@ function _prefillFromURL() {
     var amountEl    = document.querySelector('#calc-amount');
     var countryEl   = document.querySelector('#calc-country');
     var ecaRateEl   = document.querySelector('#calc-eca-rate');
-    var downLocalEl = document.querySelector('#calc-down-local');
-    var downECAEl   = document.querySelector('#calc-down-eca');
 
     if (params.has('amount')    && amountEl)    amountEl.value    = params.get('amount');
     if (params.has('rate')      && ecaRateEl)   ecaRateEl.value   = params.get('rate');
-    if (params.has('downLocal') && downLocalEl) downLocalEl.value = params.get('downLocal');
-    if (params.has('downECA')   && downECAEl)   downECAEl.value   = params.get('downECA');
 
     if (params.has('country') && countryEl) {
         var code = params.get('country');
@@ -675,9 +653,7 @@ function initCalculator() {
     // --- Attach event listeners to all calculator inputs ---
     var inputIds = [
         '#calc-amount',
-        '#calc-eca-rate',
-        '#calc-down-local',
-        '#calc-down-eca'
+        '#calc-eca-rate'
     ];
 
     inputIds.forEach(function (sel) {
@@ -697,39 +673,6 @@ function initCalculator() {
     var equipEl = document.querySelector('#calc-equipment-type');
     if (equipEl) {
         equipEl.addEventListener('change', calculateSavings);
-    }
-
-    // Currency toggle
-    var currToggle = document.querySelector('#calc-currency-toggle');
-    if (currToggle) {
-        currToggle.addEventListener('change', function () {
-            _showLocalCurrency = currToggle.checked;
-            calculateSavings();
-        });
-    }
-
-    // Amortization toggle button
-    var amortBtn = document.querySelector('#btn-amortization');
-    if (amortBtn) {
-        amortBtn.addEventListener('click', toggleAmortization);
-    }
-
-    // "Show all months" toggle inside amortization section
-    var allMonthsBtn = document.querySelector('#amort-toggle-months');
-    if (allMonthsBtn) {
-        allMonthsBtn.addEventListener('click', toggleAllMonths);
-    }
-
-    // Share button
-    var shareBtn = document.querySelector('#btn-share');
-    if (shareBtn) {
-        shareBtn.addEventListener('click', shareCalculation);
-    }
-
-    // Export/Print button
-    var exportBtn = document.querySelector('#btn-export');
-    if (exportBtn) {
-        exportBtn.addEventListener('click', exportPDF);
     }
 
     // --- Run the initial calculation ---

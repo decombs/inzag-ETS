@@ -34,7 +34,7 @@ Navigate to **Settings > Business tools > Business profile** and fill in the fol
 | **Category**       | Financial Services (or Business Service)                              |
 | **Description**    | We help African businesses access European government-backed equipment financing (ECA financing) at 4-7% interest rates. Mining, construction, manufacturing, energy, and logistics equipment from European manufacturers with 5-8 year repayment terms and only 15% down payment. |
 | **Address**        | Taunusstraße 5, 65183 Wiesbaden, Germany                              |
-| **Email**          | ets@inzag.de                                                          |
+| **Email**          | ETS@INZAG.de                                                          |
 | **Website**        | *(Enter the INZAG ETS website URL when available)*                    |
 
 ### Step 3: Set Business Hours
@@ -86,7 +86,7 @@ Navigate to **Settings > Business tools > Away message** and enable it.
 **Message:**
 
 ```
-Thanks for reaching out to INZAG ETS. We're currently away but will respond within 1 business day. For urgent inquiries, email ets@inzag.de
+Thanks for reaching out to INZAG ETS. We're currently away but will respond within 1 business day. For urgent inquiries, email ETS@INZAG.de
 ```
 
 ### Quick Replies
@@ -149,8 +149,8 @@ Which sector is your business in?
 #### /contact
 
 ```
-Email: ets@inzag.de
-Phone: +49 611 950014 60
+Email: ETS@INZAG.de
+Phone: +49 611 950014 66
 Location: Taunusstraße 5, 65183 Wiesbaden, Germany
 Hours: Mon-Fri, 9 AM - 6 PM CET
 
@@ -371,7 +371,7 @@ BOT: "What is your preferred name and email?"
     v
 BOT: "Thank you, [name]. A team member will respond within
       1-2 business days during our hours (Mon-Fri, 9 AM - 6 PM CET).
-      For urgent matters, email ets@inzag.de directly."
+      For urgent matters, email ETS@INZAG.de directly."
     |
     v
 [Assign conversation to team agent in WATI inbox]
