@@ -27,6 +27,9 @@
     /** Current step the user is on (1-indexed). */
     var currentStep = 1;
 
+    /** Whether the wizard has been initialized (skip scroll on first showStep). */
+    var isInitializing = true;
+
     // Sector-to-score mapping (max 10 points)
     var SECTOR_SCORES = {
         'Mining & Resources':    10,
@@ -100,14 +103,16 @@
 
     /**
      * Update the visual progress indicator to reflect the given step.
-     * Looks for elements with `data-step` attributes inside `#wizard-progress`.
-     * Falls back gracefully if the progress bar HTML is absent.
+     * Supports both ID-based (#wizard-progress) and class-based (.wizard-progress) markup.
      *
      * @param {number} step  Current step (1-4).
      */
     function updateProgressBar(step) {
-        // Update individual step indicators (if present)
+        // Try ID-based first, then class-based
         var indicators = document.querySelectorAll('#wizard-progress [data-step]');
+        if (!indicators.length) {
+            indicators = document.querySelectorAll('.wizard-progress-step[data-step], .wizard-progress [data-step]');
+        }
         for (var i = 0; i < indicators.length; i++) {
             var indicatorStep = parseInt(indicators[i].getAttribute('data-step'), 10);
             indicators[i].classList.remove('active', 'completed');
@@ -140,20 +145,28 @@
         var steps = document.querySelectorAll('.wizard-step');
         for (var i = 0; i < steps.length; i++) {
             steps[i].classList.remove('active');
+            steps[i].style.display = 'none';
         }
 
+        // Try ID-based first, then fall back to data-step attribute
         var target = document.getElementById('wizard-step-' + stepNumber);
+        if (!target) {
+            target = document.querySelector('.wizard-step[data-step="' + stepNumber + '"]');
+        }
         if (target) {
             target.classList.add('active');
+            target.style.display = '';
         }
 
         currentStep = stepNumber;
         updateProgressBar(stepNumber);
 
-        // Scroll wizard into view so the user isn't lost
-        var wizard = document.getElementById('wizard');
-        if (wizard) {
-            wizard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Only scroll into view on user navigation, not on initial page load
+        if (!isInitializing) {
+            var wizard = document.getElementById('wizard');
+            if (wizard) {
+                wizard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
         }
     }
 
@@ -170,6 +183,9 @@
      */
     function validateStep() {
         var stepEl = document.getElementById('wizard-step-' + currentStep);
+        if (!stepEl) {
+            stepEl = document.querySelector('.wizard-step[data-step="' + currentStep + '"]');
+        }
         if (!stepEl) return true;
 
         // Check text / select inputs marked required
@@ -284,7 +300,8 @@
             'Company: ' + companyName + ', Country: ' + country + ', Sector: ' + sector + '. ' +
             "I\u2019d like to discuss next steps."
         );
-        var waHref = 'https://wa.me/?text=' + waText;
+        var waNumber = (window.INZAG && window.INZAG.whatsappNumber) ? window.INZAG.whatsappNumber : '4961195001466';
+        var waHref = 'https://wa.me/' + waNumber + '?text=' + waText;
 
         var bookCallHref = 'mailto:ets@inzag.de?subject=' + encodeURIComponent('Book a Call — ' + companyName);
 
@@ -429,8 +446,10 @@
         var wizard = document.getElementById('wizard');
         if (!wizard) return;
 
-        // Show step 1
+        // Show step 1 without scrolling
+        isInitializing = true;
         showStep(1);
+        isInitializing = false;
 
         // Delegate click events for Next / Back buttons inside the wizard
         wizard.addEventListener('click', function (e) {

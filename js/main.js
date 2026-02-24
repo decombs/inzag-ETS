@@ -12,7 +12,7 @@ window.INZAG = window.INZAG || {};
 window.INZAG.calcSavings    = null;   // set by calculator after calculation (e.g. "$66,000/mo")
 window.INZAG.calcAmount     = null;   // set by calculator after calculation (e.g. "$5,000,000")
 window.INZAG.readinessResult = null;  // set by readiness wizard after completion (e.g. "Excellent Fit")
-window.INZAG.whatsappNumber  = '491234567890'; // placeholder — replace with real number
+window.INZAG.whatsappNumber  = '4961195001466';
 
 
 /* =====================================================================
