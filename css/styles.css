@@ -151,8 +151,19 @@ body {
 }
 
 .nav-dropdown:hover .nav-dropdown-menu,
-.nav-dropdown.open .nav-dropdown-menu {
+.nav-dropdown.open .nav-dropdown-menu,
+.nav-dropdown-menu.show {
     display: block;
+}
+
+/* Invisible bridge to prevent dropdown from closing when moving mouse to it */
+.nav-dropdown-menu::before {
+    content: '';
+    position: absolute;
+    top: -0.5rem;
+    left: 0;
+    right: 0;
+    height: 0.5rem;
 }
 
 .nav-dropdown-menu li {
