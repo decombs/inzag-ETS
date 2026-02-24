@@ -120,16 +120,7 @@ var chatFlow = {
         ]
     },
     qualify_sector: {
-        bot: "Let\u2019s do a quick check. First \u2014 what sector is your business in?",
-        options: [
-            { text: "Mining & Resources",              next: "qualify_size" },
-            { text: "Construction",                    next: "qualify_size" },
-            { text: "Manufacturing",                   next: "qualify_size" },
-            { text: "Energy / Utilities / Logistics",  next: "qualify_size" }
-        ]
-    },
-    qualify_size: {
-        bot: "Great, that sector fits well. Now \u2014 roughly how much is the equipment you need?",
+        bot: "Let\u2019s do a quick check. Roughly how much is the equipment you need?",
         options: [
             { text: "Under $1 million", next: "too_small" },
             { text: "$1\u20135 million",    next: "qualify_revenue" },
