@@ -466,7 +466,7 @@ function _renderAmortizationTable() {
  * generated / refreshed.
  */
 function toggleAmortization() {
-    var section = document.querySelector('#amort-container');
+    var section = document.querySelector('#amort-container') || document.querySelector('#amort-section');
     if (!section) return;
 
     _amortVisible = !_amortVisible;
@@ -496,10 +496,16 @@ function toggleAllMonths() {
  * displayed values update accordingly.
  */
 function toggleCurrency() {
-    _showLocalCurrency = !_showLocalCurrency;
-    var btn = document.querySelector('#calc-currency-toggle');
-    if (btn) {
-        btn.textContent = _showLocalCurrency ? 'Show in USD' : 'Show in Local Currency';
+    var el = document.querySelector('#calc-currency-toggle');
+    if (el && el.type === 'checkbox') {
+        // Checkbox on country pages — read its state
+        _showLocalCurrency = el.checked;
+    } else {
+        // Button on index / south-africa — toggle manually
+        _showLocalCurrency = !_showLocalCurrency;
+        if (el) {
+            el.textContent = _showLocalCurrency ? 'Show in USD' : 'Show in Local Currency';
+        }
     }
     calculateSavings();
 }
@@ -673,6 +679,31 @@ function initCalculator() {
     var equipEl = document.querySelector('#calc-equipment-type');
     if (equipEl) {
         equipEl.addEventListener('change', calculateSavings);
+    }
+
+    // Currency toggle — checkbox (country pages) or button (index/SA)
+    var currToggle = document.querySelector('#calc-currency-toggle');
+    if (currToggle) {
+        var currEvent = (currToggle.type === 'checkbox') ? 'change' : 'click';
+        currToggle.addEventListener(currEvent, toggleCurrency);
+    }
+
+    // Amortization toggle button (country pages use #btn-amortization)
+    var amortBtn = document.querySelector('#btn-amortization');
+    if (amortBtn) {
+        amortBtn.addEventListener('click', toggleAmortization);
+    }
+
+    // Share button
+    var shareBtn = document.querySelector('#btn-share');
+    if (shareBtn) {
+        shareBtn.addEventListener('click', shareCalculation);
+    }
+
+    // Export/Print button
+    var exportBtn = document.querySelector('#btn-export');
+    if (exportBtn) {
+        exportBtn.addEventListener('click', exportPDF);
     }
 
     // --- Run the initial calculation ---
